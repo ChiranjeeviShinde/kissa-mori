@@ -1,20 +1,32 @@
-import React from "react";
+type Item = {
+  id: number;
+  name: string;
+  category: string;
+  price: number;
+  image: string;
+};
 
-const ItemCard = () => {
+type ItemCardProps = {
+  item: Item;
+};
+
+const ItemCard = ({ item }: ItemCardProps) => {
   return (
-    <div className="overflow-hidden rounded-3xl bg-[#FBF9F6] shadow-sm">
+    <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
       <img
-        src="/coffee.jpg"
-        alt="coffee"
+        src={item.image}
+        alt={item.name}
         className="h-36 w-full object-cover"
       />
 
-      <div className="flex items-end justify-between p-4">
-        <h3 className="max-w-[70%] text-lg font-semibold leading-tight">
-          A big long coffee name
+      <div className="flex h-28 justify-between p-4">
+        <h3 className="max-w-45 text-lg font-medium leading-tight">
+          {item.name}
         </h3>
 
-        <p className="text-lg font-bold">$7</p>
+        <p className="self-end text-xl font-bold text-[#383C39]">
+          ${item.price}
+        </p>
       </div>
     </div>
   );

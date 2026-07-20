@@ -6,18 +6,7 @@ import SearchBar from "../../components/Searchbar";
 import FeaturedCard from "../../components/FeaturedCard";
 import ItemCard from "../../components/ItemCard";
 import ItemBox from "../../components/ItemBox";
-
-const categories = [
-  "All",
-  "Espresso",
-  "Latte",
-  "Cappuccino",
-  "Mocha",
-  "Cold Brew",
-  "Iced",
-  "Tea",
-  "Desserts",
-];
+import { categories, items } from "../../data/menu";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -28,6 +17,8 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -40,16 +31,23 @@ export default function Home() {
     return <Loading />;
   }
 
+  const filteredItems =
+    selectedCategory === "All"
+      ? items
+      : items.filter((item) => item.category === selectedCategory);
+
   return (
     <>
-      <div className="m-3 sticky top-0 z-50 bg-white">
-        <div className="flex flex-row justify-between">
-          <h1 className="text-3xl font-bold underline">
-            <img src="/public/logo.png" className="w-28" />
-          </h1>
-          <Navbar />
+      <div className="sticky top-0 z-50 bg-[#F2F7F3] pt-3 ">
+        <div className="m-3">
+          <div className="flex flex-row justify-between">
+            <h1 className="text-3xl font-bold underline">
+              <img src="/public/logo.png" className="w-28" />
+            </h1>
+            <Navbar />
+          </div>
+          <SearchBar />
         </div>
-        <SearchBar />
       </div>
 
       <div className="flex gap-4 overflow-x-auto px-4 py-2 scrollbar-hide">
@@ -59,14 +57,19 @@ export default function Home() {
       </div>
 
       <div className="flex gap-3 overflow-x-auto px-4 py-3 scrollbar-hide">
-        {categories.map((item) => (
-          <ItemBox key={item} name={item} />
+        {categories.map((category) => (
+          <ItemBox
+            key={category}
+            name={category}
+            active={selectedCategory === category}
+            onClick={() => setSelectedCategory(category)}
+          />
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 p-4">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <ItemCard key={i} />
+      <div className="grid grid-cols-2 gap-4 p-4 scrollbar-hide md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {filteredItems.map((item) => (
+          <ItemCard key={item.name} item={item} />
         ))}
       </div>
     </>
