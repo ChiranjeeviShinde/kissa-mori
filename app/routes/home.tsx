@@ -7,6 +7,7 @@ import FeaturedCard from "../../components/FeaturedCard";
 import ItemCard from "../../components/ItemCard";
 import ItemBox from "../../components/ItemBox";
 import { categories, items } from "../../data/menu";
+import { Link } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -69,7 +70,9 @@ export default function Home() {
 
       <div className="grid grid-cols-2 gap-4 p-4 scrollbar-hide md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {filteredItems.map((item) => (
-          <ItemCard key={item.name} item={item} />
+          <Link to={`/coffee/${item.id}`}>
+            <ItemCard key={item.name} item={item} />
+          </Link>
         ))}
       </div>
     </>

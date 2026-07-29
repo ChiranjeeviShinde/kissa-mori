@@ -11,8 +11,15 @@ type ItemCardProps = {
 };
 
 const ItemCard = ({ item }: ItemCardProps) => {
+  const handleClick = () => {
+    console.log("item card clicked! - ", item.id);
+  };
+
   return (
-    <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
+    <div
+      onClick={handleClick}
+      className="overflow-hidden rounded-3xl bg-white shadow-sm"
+    >
       <img
         src={item.image}
         alt={item.name}

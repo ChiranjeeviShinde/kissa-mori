@@ -19,6 +19,8 @@ export const items: Item[] = [
     category: "Espresso",
     price: 5,
     image: "/coffee.jpg",
+    description:
+      "A rich, concentrated shot of coffee with a bold aroma and smooth crema.",
   },
   {
     id: 2,
@@ -26,6 +28,8 @@ export const items: Item[] = [
     category: "Espresso",
     price: 6,
     image: "/coffee.jpg",
+    description:
+      "Two shots of espresso for a stronger, fuller coffee experience.",
   },
   {
     id: 3,
@@ -33,6 +37,7 @@ export const items: Item[] = [
     category: "Cappuccino",
     price: 7,
     image: "/coffee.jpg",
+    description: "Equal parts espresso, steamed milk, and velvety milk foam.",
   },
   {
     id: 4,
@@ -40,6 +45,8 @@ export const items: Item[] = [
     category: "Latte",
     price: 8,
     image: "/coffee.jpg",
+    description:
+      "Smooth espresso blended with creamy steamed milk and a light foam.",
   },
   {
     id: 5,
@@ -47,6 +54,8 @@ export const items: Item[] = [
     category: "Latte",
     price: 9,
     image: "/coffee.jpg",
+    description:
+      "Classic latte infused with sweet vanilla syrup for a comforting flavor.",
   },
   {
     id: 6,
@@ -54,6 +63,8 @@ export const items: Item[] = [
     category: "Latte",
     price: 9,
     image: "/coffee.jpg",
+    description:
+      "Creamy latte sweetened with rich caramel for a buttery finish.",
   },
   {
     id: 7,
@@ -61,6 +72,8 @@ export const items: Item[] = [
     category: "Mocha",
     price: 10,
     image: "/coffee.jpg",
+    description:
+      "Espresso mixed with chocolate and steamed milk for a decadent treat.",
   },
   {
     id: 8,
@@ -68,6 +81,8 @@ export const items: Item[] = [
     category: "Mocha",
     price: 11,
     image: "/coffee.jpg",
+    description:
+      "A creamy blend of espresso, white chocolate, and steamed milk.",
   },
   {
     id: 9,
@@ -75,6 +90,8 @@ export const items: Item[] = [
     category: "Cold Brew",
     price: 8,
     image: "/coffee.jpg",
+    description:
+      "Slow-steeped coffee served cold with a naturally smooth, refreshing taste.",
   },
   {
     id: 10,
@@ -82,5 +99,7 @@ export const items: Item[] = [
     category: "Cold Brew",
     price: 7,
     image: "/coffee.jpg",
+    description:
+      "Espresso poured over chilled water and ice for a crisp, bold drink.",
   },
 ];
