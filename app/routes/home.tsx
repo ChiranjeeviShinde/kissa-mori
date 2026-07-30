@@ -7,27 +7,65 @@ import FeaturedCard from "../../components/FeaturedCard";
 import ItemCard from "../../components/ItemCard";
 import ItemBox from "../../components/ItemBox";
 import { categories, items } from "../../data/menu";
-import { Link } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import Fuse from "fuse.js";
 import { connectDB } from "../db.server";
+import Coffee from "../models/coffee.server";
 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Kissa Mori" },
-    { name: "description", content: "Welcome to React Router!" },
+    { name: "description", content: "Welcome to Kissa Mori Café!" },
   ];
 }
 
 export async function loader() {
   await connectDB();
 
-  return {};
+  const items = await Coffee.find().lean();
+
+  return {
+    items: items.map((item) => ({
+      ...item,
+      _id: item._id.toString(),
+    })),
+  };
 }
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSearch] = useState("");
+
+  const { items } = useLoaderData<typeof loader>();
+
+  const categories = useMemo(
+    () => ["All", ...new Set(items.map((item) => item.category))],
+    [items],
+  );
+
+  const categoryItems = useMemo(
+    () =>
+      selectedCategory === "All"
+        ? items
+        : items.filter((item) => item.category === selectedCategory),
+    [items, selectedCategory],
+  );
+
+  const fuse = useMemo(
+    () =>
+      new Fuse(categoryItems, {
+        keys: ["name", "description", "category"],
+        threshold: 0.3,
+      }),
+    [categoryItems],
+  );
+
+  const filteredItems = useMemo(
+    () =>
+      search ? fuse.search(search).map((result) => result.item) : categoryItems,
+    [search, fuse, categoryItems],
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -36,24 +74,6 @@ export default function Home() {
 
     return () => clearTimeout(timer);
   }, []);
-
-  const categoryItems =
-    selectedCategory === "All"
-      ? items
-      : items.filter((item) => item.category === selectedCategory);
-
-  const fuse = useMemo(
-    () =>
-      new Fuse(categoryItems, {
-        keys: ["name", "category"],
-        threshold: 0.3,
-      }),
-    [categoryItems],
-  );
-
-  const filteredItems = search
-    ? fuse.search(search).map((result) => result.item)
-    : categoryItems;
 
   if (loading) {
     return <Loading />;
@@ -72,13 +92,11 @@ export default function Home() {
           <SearchBar value={search} onChange={setSearch} />
         </div>
       </div>
-
       <div className="flex gap-4 overflow-x-auto px-4 py-2 scrollbar-hide">
         {Array.from({ length: 20 }).map((_, i) => (
           <FeaturedCard key={i} />
         ))}
       </div>
-
       <div className="flex gap-3 overflow-x-auto px-4 py-3 scrollbar-hide">
         {categories.map((category) => (
           <ItemBox
@@ -91,11 +109,13 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 p-4 scrollbar-hide md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {filteredItems.map((item) => (
-          <Link key={item.name} to={`/coffee/${item.id}`}>
-            <ItemCard item={item} />
-          </Link>
-        ))}
+        {filteredItems.map((item) => {
+          return (
+            <Link key={item._id} to={`/coffee/${item._id}`}>
+              <ItemCard item={item} />
+            </Link>
+          );
+        })}
       </div>
     </>
   );

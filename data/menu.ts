@@ -14,7 +14,6 @@ export const categories = [
 
 export const items: Item[] = [
   {
-    id: 1,
     name: "Espresso",
     category: "Espresso",
     price: 5,
@@ -23,7 +22,6 @@ export const items: Item[] = [
       "A rich, concentrated shot of coffee with a bold aroma and smooth crema.",
   },
   {
-    id: 2,
     name: "Double Espresso",
     category: "Espresso",
     price: 6,
@@ -32,7 +30,6 @@ export const items: Item[] = [
       "Two shots of espresso for a stronger, fuller coffee experience.",
   },
   {
-    id: 3,
     name: "Cappuccino",
     category: "Cappuccino",
     price: 7,
@@ -40,7 +37,6 @@ export const items: Item[] = [
     description: "Equal parts espresso, steamed milk, and velvety milk foam.",
   },
   {
-    id: 4,
     name: "Latte",
     category: "Latte",
     price: 8,
@@ -49,7 +45,6 @@ export const items: Item[] = [
       "Smooth espresso blended with creamy steamed milk and a light foam.",
   },
   {
-    id: 5,
     name: "Vanilla Latte",
     category: "Latte",
     price: 9,
@@ -58,7 +53,6 @@ export const items: Item[] = [
       "Classic latte infused with sweet vanilla syrup for a comforting flavor.",
   },
   {
-    id: 6,
     name: "Caramel Latte",
     category: "Latte",
     price: 9,
@@ -67,7 +61,6 @@ export const items: Item[] = [
       "Creamy latte sweetened with rich caramel for a buttery finish.",
   },
   {
-    id: 7,
     name: "Mocha",
     category: "Mocha",
     price: 10,
@@ -76,7 +69,6 @@ export const items: Item[] = [
       "Espresso mixed with chocolate and steamed milk for a decadent treat.",
   },
   {
-    id: 8,
     name: "White Mocha",
     category: "Mocha",
     price: 11,
@@ -85,7 +77,6 @@ export const items: Item[] = [
       "A creamy blend of espresso, white chocolate, and steamed milk.",
   },
   {
-    id: 9,
     name: "Cold Brew",
     category: "Cold Brew",
     price: 8,
@@ -94,7 +85,6 @@ export const items: Item[] = [
       "Slow-steeped coffee served cold with a naturally smooth, refreshing taste.",
   },
   {
-    id: 10,
     name: "Iced Americano",
     category: "Cold Brew",
     price: 7,

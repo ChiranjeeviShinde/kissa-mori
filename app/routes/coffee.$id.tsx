@@ -1,10 +1,27 @@
-import { useParams } from "react-router";
-import { items } from "../../data/menu";
+import { Link, useLoaderData } from "react-router";
+import type { Route } from "./+types/coffee.$id";
+import { connectDB } from "../db.server";
+import Coffee from "../models/coffee.server";
+
+export async function loader({ params }: Route.LoaderArgs) {
+  await connectDB();
+
+  const coffee = await Coffee.findById(params.id).lean().exec();
+
+  if (!coffee) {
+    throw new Response("Not Found", { status: 404 });
+  }
+
+  return {
+    coffee: {
+      ...coffee,
+      _id: coffee._id.toString(),
+    },
+  };
+}
 
 export default function CoffeePage() {
-  const { id } = useParams();
-
-  const coffee = items.find((item) => item.id === Number(id));
+  const { coffee } = useLoaderData<typeof loader>();
 
   if (!coffee) {
     return <h1>Coffee not found</h1>;
@@ -127,6 +144,9 @@ export default function CoffeePage() {
               <p className="mt-2 text-xl font-semibold">⭐ 4.8</p>
             </div>
           </div>
+          <Link type="button" to={"/"}>
+            Go back
+          </Link>
         </div>
       </div>
     </div>
