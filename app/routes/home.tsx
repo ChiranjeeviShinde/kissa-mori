@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Loading from "./loading";
 import Navbar from "../../components/Navbar";
 import SearchBar from "../../components/Searchbar";
@@ -8,6 +8,8 @@ import ItemCard from "../../components/ItemCard";
 import ItemBox from "../../components/ItemBox";
 import { categories, items } from "../../data/menu";
 import { Link } from "react-router";
+import Fuse from "fuse.js";
+import { connectDB } from "../db.server";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -16,26 +18,46 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+export async function loader() {
+  await connectDB();
+
+  return {};
+}
+
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 0);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
-    return <Loading />;
-  }
-
-  const filteredItems =
+  const categoryItems =
     selectedCategory === "All"
       ? items
       : items.filter((item) => item.category === selectedCategory);
+
+  const fuse = useMemo(
+    () =>
+      new Fuse(categoryItems, {
+        keys: ["name", "category"],
+        threshold: 0.3,
+      }),
+    [categoryItems],
+  );
+
+  const filteredItems = search
+    ? fuse.search(search).map((result) => result.item)
+    : categoryItems;
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -43,11 +65,11 @@ export default function Home() {
         <div className="m-3">
           <div className="flex flex-row justify-between">
             <h1 className="text-3xl font-bold underline">
-              <img src="/public/logo.png" className="w-28" />
+              <img src="/logo.png" className="w-28" />
             </h1>
             <Navbar />
           </div>
-          <SearchBar />
+          <SearchBar value={search} onChange={setSearch} />
         </div>
       </div>
 
@@ -70,8 +92,8 @@ export default function Home() {
 
       <div className="grid grid-cols-2 gap-4 p-4 scrollbar-hide md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {filteredItems.map((item) => (
-          <Link to={`/coffee/${item.id}`}>
-            <ItemCard key={item.name} item={item} />
+          <Link key={item.name} to={`/coffee/${item.id}`}>
+            <ItemCard item={item} />
           </Link>
         ))}
       </div>

@@ -71,7 +71,7 @@ export default function CoffeePage() {
 
   return (
     <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-8 rounded-[40px] bg-[#F2F7F3] p-6 md:mt-10 md:flex-row md:gap-10 md:p-12">
-      <div className="w-fit shrink-0 bg-amber-200 md:w-[38%]">
+      <div className="w-fit shrink-0 md:w-[38%]">
         <img
           src={coffee.image}
           alt={coffee.name}
