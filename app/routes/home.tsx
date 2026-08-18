@@ -6,11 +6,11 @@ import SearchBar from "../../components/Searchbar";
 import FeaturedCard from "../../components/FeaturedCard";
 import ItemCard from "../../components/ItemCard";
 import ItemBox from "../../components/ItemBox";
-import { categories, items } from "../../data/menu";
-import { Link, useLoaderData } from "react-router";
+import { Link } from "react-router";
 import Fuse from "fuse.js";
-import { connectDB } from "../db.server";
-import Coffee from "../models/coffee.server";
+import { useCoffee } from "../context/CoffeeContext";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -19,37 +19,66 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader() {
-  await connectDB();
+const s3Client = new S3Client({
+  region: "ap-south-1",
+  credentials: {
+    accessKeyId: process.env.AWS_BUCKET_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_BUCKET_ACCESS_SECRET_KEY_ID!,
+  },
+});
 
-  const items = await Coffee.find().lean();
+async function getImage(key: string) {
+  const command = new GetObjectCommand({
+    Bucket: "kissa-mori",
+    Key: key,
+  });
+
+  return await getSignedUrl(s3Client, command);
+}
+
+// export async function loader() {
+//   await connectDB();
+
+//   const items = await Coffee.find().lean();
+
+//   return {
+//     items: items.map((item) => ({
+//       ...item,
+//       _id: item._id.toString(),
+//     })),
+//   };
+// }
+
+export async function loader() {
+  const imageUrl = await getImage("coffee.jpg");
+  const imageUrl2 = await getImage("coffee2.jpg");
 
   return {
-    items: items.map((item) => ({
-      ...item,
-      _id: item._id.toString(),
-    })),
+    imageUrl,
+    imageUrl2,
   };
 }
 
-export default function Home() {
-  const [loading, setLoading] = useState(true);
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const [loadingScreen, setLoadingScreen] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSearch] = useState("");
 
-  const { items } = useLoaderData<typeof loader>();
+  const { coffees } = useCoffee();
+
+  const { imageUrl, imageUrl2 } = loaderData;
 
   const categories = useMemo(
-    () => ["All", ...new Set(items.map((item) => item.category))],
-    [items],
+    () => ["All", ...new Set(coffees.map((coffee) => coffee.category))],
+    [coffees],
   );
 
   const categoryItems = useMemo(
     () =>
       selectedCategory === "All"
-        ? items
-        : items.filter((item) => item.category === selectedCategory),
-    [items, selectedCategory],
+        ? coffees
+        : coffees.filter((coffee) => coffee.category === selectedCategory),
+    [coffees, selectedCategory],
   );
 
   const fuse = useMemo(
@@ -69,13 +98,13 @@ export default function Home() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLoading(false);
+      setLoadingScreen(false);
     }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
+  if (loadingScreen) {
     return <Loading />;
   }
 
@@ -94,7 +123,7 @@ export default function Home() {
       </div>
       <div className="flex gap-4 overflow-x-auto px-4 py-2 scrollbar-hide">
         {Array.from({ length: 20 }).map((_, i) => (
-          <FeaturedCard key={i} />
+          <FeaturedCard imageUrl={imageUrl2} key={i} />
         ))}
       </div>
       <div className="flex gap-3 overflow-x-auto px-4 py-3 scrollbar-hide">
@@ -109,10 +138,16 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 p-4 scrollbar-hide md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {filteredItems.map((item) => {
+        {filteredItems.map((coffee) => {
           return (
-            <Link key={item._id} to={`/coffee/${item._id}`}>
-              <ItemCard item={item} />
+            <Link key={coffee._id} to={`/coffee/${coffee._id}`}>
+              <ItemCard
+                item={{
+                  ...coffee,
+                  id: coffee._id,
+                }}
+                imageUrl={imageUrl}
+              />
             </Link>
           );
         })}

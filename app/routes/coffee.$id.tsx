@@ -1,27 +1,29 @@
-import { Link, useLoaderData } from "react-router";
+import { Link, useLoaderData, useLocation, useParams } from "react-router";
 import type { Route } from "./+types/coffee.$id";
-import { connectDB } from "../db.server";
-import Coffee from "../models/coffee.server";
+import { useCoffee } from "../context/CoffeeContext";
 
-export async function loader({ params }: Route.LoaderArgs) {
-  await connectDB();
+// export async function loader({ params }: Route.LoaderArgs) {
+//   await connectDB();
 
-  const coffee = await Coffee.findById(params.id).lean().exec();
+//   const coffee = await Coffee.findById(params.id).lean().exec();
 
-  if (!coffee) {
-    throw new Response("Not Found", { status: 404 });
-  }
+//   if (!coffee) {
+//     throw new Response("Not Found", { status: 404 });
+//   }
 
-  return {
-    coffee: {
-      ...coffee,
-      _id: coffee._id.toString(),
-    },
-  };
-}
+//   return {
+//     coffee: {
+//       ...coffee,
+//       _id: coffee._id.toString(),
+//     },
+//   };
+// }
 
 export default function CoffeePage() {
-  const { coffee } = useLoaderData<typeof loader>();
+  const { coffees } = useCoffee();
+  const { id } = useParams();
+
+  const coffee = coffees.find((c) => c._id === id);
 
   if (!coffee) {
     return <h1>Coffee not found</h1>;
@@ -144,8 +146,8 @@ export default function CoffeePage() {
               <p className="mt-2 text-xl font-semibold">⭐ 4.8</p>
             </div>
           </div>
-          <Link type="button" to={"/"}>
-            Go back
+          <Link to={`/`} state={{ coffee }}>
+            Go Back
           </Link>
         </div>
       </div>

@@ -30,7 +30,7 @@ export default function Loading() {
       <img
         alt="Kissa Mori"
         className="w-50 md:w-96 object-contain mb-12"
-        src="/public/logo.png"
+        src="/logo.png"
       ></img>
 
       <div className="w-80 fade-in">

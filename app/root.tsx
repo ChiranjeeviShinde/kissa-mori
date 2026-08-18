@@ -5,12 +5,16 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
   useNavigation,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
 import Loading from "./routes/loading";
+import { CoffeeProvider } from "./context/CoffeeContext";
+import { connectDB } from "./db.server";
+import Coffee from "./models/coffee.server";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -24,6 +28,19 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
+
+export async function loader() {
+  await connectDB();
+
+  const coffees = await Coffee.find().lean();
+
+  return {
+    coffees: coffees.map((coffee) => ({
+      ...coffee,
+      _id: coffee._id.toString(),
+    })),
+  };
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -49,7 +66,14 @@ export default function App() {
   if (navigation.state === "loading") {
     return <Loading />;
   }
-  return <Outlet />;
+
+  const { coffees } = useLoaderData<typeof loader>();
+
+  return (
+    <CoffeeProvider coffees={coffees}>
+      <Outlet />
+    </CoffeeProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
