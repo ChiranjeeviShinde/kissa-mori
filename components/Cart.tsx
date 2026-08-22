@@ -1,7 +1,8 @@
 import React from "react";
-import { Minus, Plus, Trash2, X } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 import { useCoffee } from "../app/context/CoffeeContext";
 import { useFetcher } from "react-router";
+import AddRemoveButtons from "./AddRemoveButtons";
 
 type CartProps = {
   open: boolean;
@@ -16,20 +17,6 @@ export default function Cart({ open, setOpen }: CartProps) {
   const total = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
 
   const fetcher = useFetcher();
-
-  const handleAddItem = (id: string) => {
-    fetcher.submit(null, {
-      method: "post",
-      action: `/api/coffee/${id}/cart`,
-    });
-  };
-
-  const handleRemoveItem = (id: string) => {
-    fetcher.submit(null, {
-      method: "post",
-      action: `/api/coffee/${id}/cart/remove`,
-    });
-  };
 
   const handleDeleteItem = (id: string) => {
     fetcher.submit(null, {
@@ -83,25 +70,7 @@ export default function Cart({ open, setOpen }: CartProps) {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center rounded-full border border-gray-300 bg-white">
-                    <button
-                      onClick={() => handleRemoveItem(item._id)}
-                      className="px-3 py-2 transition"
-                    >
-                      <Minus size={16} />
-                    </button>
-
-                    <span className="w-8 text-center font-medium">
-                      {item.qty}
-                    </span>
-
-                    <button
-                      onClick={() => handleAddItem(item._id)}
-                      className="px-3 py-2 transition"
-                    >
-                      <Plus size={16} />
-                    </button>
-                  </div>
+                  <AddRemoveButtons item={item} />
 
                   <button
                     onClick={() => handleDeleteItem(item._id)}

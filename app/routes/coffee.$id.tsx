@@ -1,6 +1,7 @@
 import { useFetcher, useParams } from "react-router";
 import { useCoffee } from "../context/CoffeeContext";
 import { useNavigate } from "react-router-dom";
+import AddRemoveButtons from "../../components/AddRemoveButtons";
 
 export default function CoffeePage() {
   const { coffees } = useCoffee();
@@ -45,12 +46,16 @@ export default function CoffeePage() {
           <div className="flex items-center justify-between sm:block sm:text-right">
             <p className="text-3xl font-bold md:text-4xl">${coffee.price}</p>
 
-            <button
-              onClick={handleAddToCart}
-              className="rounded-full bg-[#383C39] px-6 py-3 text-white transition hover:opacity-90 sm:mt-6"
-            >
-              Add to Cart
-            </button>
+            {coffee.qty === 0 ? (
+              <button
+                onClick={handleAddToCart}
+                className="rounded-full bg-[#383C39] px-6 py-3 text-white transition hover:opacity-90 sm:mt-6"
+              >
+                Add to Cart
+              </button>
+            ) : (
+              <AddRemoveButtons item={coffee} />
+            )}
           </div>
         </div>
 
