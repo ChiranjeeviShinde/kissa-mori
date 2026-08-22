@@ -6,7 +6,6 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-  useNavigation,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -15,6 +14,7 @@ import Loading from "./routes/loading";
 import { CoffeeProvider } from "./context/CoffeeContext";
 import { connectDB } from "./db.server";
 import Coffee from "./models/coffee.server";
+import { useEffect, useState } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -61,13 +61,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const navigation = useNavigation();
-
-  if (navigation.state === "loading") {
-    return <Loading />;
-  }
+  const [loading, setLoading] = useState(true);
 
   const { coffees } = useLoaderData<typeof loader>();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <CoffeeProvider coffees={coffees}>

@@ -33,7 +33,7 @@ async function getImage(key: string) {
     Key: key,
   });
 
-  return await getSignedUrl(s3Client, command);
+  return await getSignedUrl(s3Client, command, { expiresIn: 1000 });
 }
 
 // export async function loader() {
@@ -60,7 +60,7 @@ export async function loader() {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const [loadingScreen, setLoadingScreen] = useState(true);
+  // const [loadingScreen, setLoadingScreen] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSearch] = useState("");
 
@@ -96,17 +96,17 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     [search, fuse, categoryItems],
   );
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoadingScreen(false);
-    }, 5000);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setLoadingScreen(false);
+  //   }, 5000);
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
-  if (loadingScreen) {
-    return <Loading />;
-  }
+  // if (loadingScreen) {
+  //   return <Loading />;
+  // }
 
   return (
     <>
@@ -122,7 +122,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </div>
       </div>
       <div className="flex gap-4 overflow-x-auto px-4 py-2 scrollbar-hide">
-        {Array.from({ length: 20 }).map((_, i) => (
+        {Array.from({ length: 10 }).map((_, i) => (
           <FeaturedCard imageUrl={imageUrl2} key={i} />
         ))}
       </div>

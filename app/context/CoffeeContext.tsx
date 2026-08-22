@@ -6,6 +6,7 @@ type Coffee = {
   category: string;
   price: number;
   description: string;
+  qty: number;
 };
 
 type CoffeeContextType = {

@@ -1,49 +1,42 @@
 import React from "react";
 import { Minus, Plus, Trash2, X } from "lucide-react";
+import { useCoffee } from "../app/context/CoffeeContext";
+import { useFetcher } from "react-router";
 
 type CartProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type CartItem = {
-  id: number;
-  name: string;
-  image: string;
-  price: number;
-  quantity: number;
-};
-
 export default function Cart({ open, setOpen }: CartProps) {
-  // Dummy data
-  const cartItems: CartItem[] = [
-    {
-      id: 1,
-      name: "Cappuccino",
-      image: "/coffee.jpg",
-      price: 5,
-      quantity: 2,
-    },
-    {
-      id: 2,
-      name: "Iced Latte",
-      image: "/coffee2.jpg",
-      price: 7,
-      quantity: 1,
-    },
-    {
-      id: 3,
-      name: "Mocha",
-      image: "/coffee.jpg",
-      price: 10,
-      quantity: 1,
-    },
-  ];
+  const { coffees } = useCoffee();
 
-  const total = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  );
+  const cartItems = coffees.filter((coffee) => coffee.qty > 0);
+
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+  const fetcher = useFetcher();
+
+  const handleAddItem = (id: string) => {
+    fetcher.submit(null, {
+      method: "post",
+      action: `/api/coffee/${id}/cart`,
+    });
+  };
+
+  const handleRemoveItem = (id: string) => {
+    fetcher.submit(null, {
+      method: "post",
+      action: `/api/coffee/${id}/cart/remove`,
+    });
+  };
+
+  const handleDeleteItem = (id: string) => {
+    fetcher.submit(null, {
+      method: "post",
+      action: `/api/coffee/${id}/cart/delete`,
+    });
+  };
 
   return (
     <>
@@ -73,11 +66,11 @@ export default function Cart({ open, setOpen }: CartProps) {
         <div className="flex-1 space-y-4 overflow-y-auto p-5">
           {cartItems.map((item) => (
             <div
-              key={item.id}
+              key={item._id}
               className="flex gap-4 rounded-3xl bg-[#FBF9F6] p-4 shadow-sm"
             >
               <img
-                src={item.image}
+                src="/coffee.jpg"
                 alt={item.name}
                 className="h-24 w-24 rounded-2xl object-cover"
               />
@@ -91,20 +84,29 @@ export default function Cart({ open, setOpen }: CartProps) {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center rounded-full border border-gray-300 bg-white">
-                    <button className="px-3 py-2 transition">
+                    <button
+                      onClick={() => handleRemoveItem(item._id)}
+                      className="px-3 py-2 transition"
+                    >
                       <Minus size={16} />
                     </button>
 
                     <span className="w-8 text-center font-medium">
-                      {item.quantity}
+                      {item.qty}
                     </span>
 
-                    <button className="px-3 py-2 transition">
+                    <button
+                      onClick={() => handleAddItem(item._id)}
+                      className="px-3 py-2 transition"
+                    >
                       <Plus size={16} />
                     </button>
                   </div>
 
-                  <button className="rounded-full p-2 text-red-500 transition hover:bg-red-50">
+                  <button
+                    onClick={() => handleDeleteItem(item._id)}
+                    className="rounded-full p-2 text-red-500 transition hover:bg-red-50"
+                  >
                     <Trash2 size={18} />
                   </button>
                 </div>
