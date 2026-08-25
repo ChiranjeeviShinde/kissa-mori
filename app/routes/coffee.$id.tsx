@@ -1,7 +1,8 @@
-import { useFetcher, useParams } from "react-router";
+import { useFetcher, useParams, useSearchParams } from "react-router";
 import { useCoffee } from "../context/CoffeeContext";
 import { useNavigate } from "react-router-dom";
 import AddRemoveButtons from "../../components/AddRemoveButtons";
+import { useEffect } from "react";
 
 export default function CoffeePage() {
   const { coffees } = useCoffee();
@@ -12,14 +13,30 @@ export default function CoffeePage() {
   if (!coffee) {
     return <h1>Coffee not found</h1>;
   }
+  const [searchParams] = useSearchParams();
+  const tableId = searchParams.get("table");
 
   const navigate = useNavigate();
-  const fetcher = useFetcher();
+
+  const cartFetcher = useFetcher();
+  const actionFetcher = useFetcher();
+
+  useEffect(() => {
+    if (tableId) {
+      cartFetcher.load(`/api/table/${tableId}/cart`);
+    }
+  }, [tableId]);
+
+  const cartItems = cartFetcher.data?.items ?? [];
+
+  const cartItem = cartItems.find((item: any) => item.coffeeId === coffee._id);
+
+  const quantity = cartItem?.qty ?? 0;
 
   const handleAddToCart = () => {
-    fetcher.submit(null, {
+    actionFetcher.submit(null, {
       method: "post",
-      action: `/api/coffee/${coffee._id}/cart`,
+      action: `/api/table/${tableId}/cart/${coffee._id}`,
     });
   };
 
@@ -46,7 +63,7 @@ export default function CoffeePage() {
           <div className="flex items-center justify-between sm:block sm:text-right">
             <p className="text-3xl font-bold md:text-4xl">${coffee.price}</p>
 
-            {coffee.qty === 0 ? (
+            {quantity === 0 ? (
               <button
                 onClick={handleAddToCart}
                 className="rounded-full bg-[#383C39] px-6 py-3 text-white transition hover:opacity-90 sm:mt-6"
@@ -54,7 +71,10 @@ export default function CoffeePage() {
                 Add to Cart
               </button>
             ) : (
-              <AddRemoveButtons item={coffee} />
+              <AddRemoveButtons
+                item={{ ...coffee, qty: quantity }}
+                tableId={tableId!}
+              />
             )}
           </div>
         </div>

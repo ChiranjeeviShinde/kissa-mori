@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Trash2, X } from "lucide-react";
-import { useCoffee } from "../app/context/CoffeeContext";
-import { useFetcher } from "react-router";
+import { useFetcher, useParams } from "react-router";
 import AddRemoveButtons from "./AddRemoveButtons";
 
 type CartProps = {
@@ -10,18 +9,30 @@ type CartProps = {
 };
 
 export default function Cart({ open, setOpen }: CartProps) {
-  const { coffees } = useCoffee();
+  const { id: tableId } = useParams();
 
-  const cartItems = coffees.filter((coffee) => coffee.qty > 0);
+  const cartFetcher = useFetcher();
+  const actionFetcher = useFetcher();
 
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+  useEffect(() => {
+    if (tableId) {
+      cartFetcher.load(`/api/table/${tableId}/cart`);
+    }
+  }, [tableId]);
 
-  const fetcher = useFetcher();
+  const cartItems = cartFetcher.data?.items ?? [];
 
-  const handleDeleteItem = (id: string) => {
-    fetcher.submit(null, {
+  const total = cartItems.reduce(
+    (sum: number, item: any) => sum + item.price * item.qty,
+    0,
+  );
+
+  const handleDeleteItem = (coffeeId: string) => {
+    if (!tableId) return;
+
+    actionFetcher.submit(null, {
       method: "post",
-      action: `/api/coffee/${id}/cart/delete`,
+      action: `/api/table/${tableId}/cart/${coffeeId}/delete`,
     });
   };
 
@@ -51,9 +62,9 @@ export default function Cart({ open, setOpen }: CartProps) {
         </div>
 
         <div className="flex-1 space-y-4 overflow-y-auto p-5">
-          {cartItems.map((item) => (
+          {cartItems.map((item: any) => (
             <div
-              key={item._id}
+              key={item.coffeeId}
               className="flex gap-4 rounded-3xl bg-[#FBF9F6] p-4 shadow-sm"
             >
               <img
@@ -70,10 +81,16 @@ export default function Cart({ open, setOpen }: CartProps) {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <AddRemoveButtons item={item} />
+                  <AddRemoveButtons
+                    item={{
+                      ...item,
+                      _id: item.coffeeId,
+                    }}
+                    tableId={tableId!}
+                  />
 
                   <button
-                    onClick={() => handleDeleteItem(item._id)}
+                    onClick={() => handleDeleteItem(item.coffeeId)}
                     className="rounded-full p-2 text-red-500 transition hover:bg-red-50"
                   >
                     <Trash2 size={18} />

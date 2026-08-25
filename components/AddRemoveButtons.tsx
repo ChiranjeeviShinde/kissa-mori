@@ -1,20 +1,26 @@
 import { Minus, Plus } from "lucide-react";
 import { useFetcher } from "react-router";
 
-const AddRemoveButtons = ({ item }: { item: any }) => {
+const AddRemoveButtons = ({
+  item,
+  tableId,
+}: {
+  item: any;
+  tableId: string;
+}) => {
   const fetcher = useFetcher();
 
   const handleAddItem = (id: string) => {
     fetcher.submit(null, {
       method: "post",
-      action: `/api/coffee/${id}/cart`,
+      action: `/api/table/${tableId}/cart/${id}`,
     });
   };
 
   const handleRemoveItem = (id: string) => {
     fetcher.submit(null, {
       method: "post",
-      action: `/api/coffee/${id}/cart/remove`,
+      action: `/api/table/${tableId}/cart/${id}/remove`,
     });
   };
   return (

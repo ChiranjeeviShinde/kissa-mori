@@ -4,7 +4,20 @@ export default [
   index("./routes/home.tsx"),
   route("loading", "./routes/loading.tsx"),
   route("coffee/:id", "./routes/coffee.$id.tsx"),
-  route("api/coffee/:id/cart", "./routes/api.coffee.$id.cart.ts"),
-  route("api/coffee/:id/cart/remove", "./routes/api.coffee.$id.cart.remove.ts"),
-  route("api/coffee/:id/cart/delete", "./routes/api.coffee.$id.cart.delete.ts"),
+  route("table/:id", "./routes/table.$id.tsx"),
+  route("api/tables", "./routes/api.tables.ts"),
+  route(
+    "api/table/:tableId/cart/:coffeeId",
+    "./routes/api.table.$tableId.cart.$coffeeId.ts",
+  ),
+  route("api/table/:tableId/cart", "./routes/api.table.$tableId.cart.ts"),
+  route(
+    "api/table/:tableId/cart/:coffeeId/remove",
+    "./routes/api.table.$tableId.cart.$coffeeId.remove.ts",
+  ),
+
+  route(
+    "api/table/:tableId/cart/:coffeeId/delete",
+    "./routes/api.table.$tableId.cart.$coffeeId.delete.ts",
+  ),
 ] satisfies RouteConfig;
