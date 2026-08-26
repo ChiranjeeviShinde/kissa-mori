@@ -109,7 +109,7 @@ export default function CoffeePage() {
             </div>
           </div>
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/table/${tableId}`)}
             className="rounded-full bg-[#383C39] px-6 py-3 text-white transition hover:opacity-90 sm:mt-6"
           >
             Go Back

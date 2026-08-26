@@ -11,16 +11,11 @@ import ItemBox from "./ItemBox";
 import { useCoffee } from "../app/context/CoffeeContext";
 
 type CoffeeShopProps = {
-  imageUrl: string;
-  imageUrl2: string;
+  images: string[];
   tableId?: string;
 };
 
-export default function CoffeeShop({
-  imageUrl,
-  imageUrl2,
-  tableId,
-}: CoffeeShopProps) {
+export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSearch] = useState("");
 
@@ -72,7 +67,7 @@ export default function CoffeeShop({
 
       <div className="flex gap-4 overflow-x-auto px-4 py-2 scrollbar-hide">
         {Array.from({ length: 10 }).map((_, i) => (
-          <FeaturedCard imageUrl={imageUrl2} key={i} />
+          <FeaturedCard images={images} key={i} />
         ))}
       </div>
 
@@ -88,24 +83,30 @@ export default function CoffeeShop({
       </div>
 
       <div className="grid grid-cols-2 gap-4 p-4 scrollbar-hide md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {filteredItems.map((coffee) => (
-          <Link
-            key={coffee._id}
-            to={
-              tableId
-                ? `/coffee/${coffee._id}?table=${tableId}`
-                : `/coffee/${coffee._id}`
-            }
-          >
-            <ItemCard
-              item={{
-                ...coffee,
-                id: coffee._id,
-              }}
-              imageUrl={imageUrl}
-            />
-          </Link>
-        ))}
+        {filteredItems.map((coffee) => {
+          const imageIndex = coffees.findIndex(
+            (item) => item._id === coffee._id,
+          );
+
+          return (
+            <Link
+              key={coffee._id}
+              to={
+                tableId
+                  ? `/coffee/${coffee._id}?table=${tableId}`
+                  : `/coffee/${coffee._id}`
+              }
+            >
+              <ItemCard
+                item={{
+                  ...coffee,
+                  id: coffee._id,
+                }}
+                image={images[imageIndex % images.length]}
+              />
+            </Link>
+          );
+        })}
       </div>
     </>
   );
