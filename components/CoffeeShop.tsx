@@ -4,7 +4,6 @@ import Fuse from "fuse.js";
 
 import Navbar from "./Navbar";
 import SearchBar from "./Searchbar";
-import FeaturedCard from "./FeaturedCard";
 import ItemCard from "./ItemCard";
 import ItemBox from "./ItemBox";
 
@@ -50,64 +49,75 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
   );
 
   return (
-    <>
-      <div className="sticky top-0 z-50 bg-[#F2F7F3] pt-3">
-        <div className="m-3">
-          <div className="flex flex-row justify-between">
-            <h1 className="text-3xl font-bold underline">
-              <img src="/logo.png" className="w-28" />
-            </h1>
+    <div className="min-h-screen bg-background">
+      <div className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
+        <div className="mx-auto max-w-6xl px-4 pt-4 sm:px-6">
+          <div className="flex flex-row items-center justify-between">
+            <img src="/logo.png" className="w-36 sm:w-44" alt="Wash Coffee" />
 
             <Navbar />
           </div>
 
-          <SearchBar value={search} onChange={setSearch} />
+          <div className=" pb-4 pt-3">
+            <SearchBar value={search} onChange={setSearch} />
+          </div>
+        </div>
+
+        <div className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-4 pb-4 scrollbar-hide sm:px-6">
+          {categories.map((category) => (
+            <ItemBox
+              key={category}
+              name={category}
+              active={selectedCategory === category}
+              onClick={() => setSelectedCategory(category)}
+            />
+          ))}
         </div>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto px-4 py-2 scrollbar-hide">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <FeaturedCard images={images} key={i} />
-        ))}
-      </div>
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <div className="mb-6">
+          <span className="text-xs font-medium uppercase tracking-widest text-accent">
+            What we're pouring
+          </span>
+          <h1 className="font-serif text-3xl font-medium text-text-primary">
+            {selectedCategory === "All" ? "Full Menu" : selectedCategory}
+          </h1>
+        </div>
 
-      <div className="flex gap-3 overflow-x-auto px-4 py-3 scrollbar-hide">
-        {categories.map((category) => (
-          <ItemBox
-            key={category}
-            name={category}
-            active={selectedCategory === category}
-            onClick={() => setSelectedCategory(category)}
-          />
-        ))}
-      </div>
+        <div className="grid grid-cols-2 gap-4 scrollbar-hide sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {filteredItems.map((coffee) => {
+            const imageIndex = coffees.findIndex(
+              (item) => item._id === coffee._id,
+            );
 
-      <div className="grid grid-cols-2 gap-4 p-4 scrollbar-hide md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {filteredItems.map((coffee) => {
-          const imageIndex = coffees.findIndex(
-            (item) => item._id === coffee._id,
-          );
+            return (
+              <Link
+                key={coffee._id}
+                to={
+                  tableId
+                    ? `/coffee/${coffee._id}?table=${tableId}`
+                    : `/coffee/${coffee._id}`
+                }
+              >
+                <ItemCard
+                  item={{
+                    ...coffee,
+                    id: coffee._id,
+                  }}
+                  image={images[imageIndex % images.length]}
+                />
+              </Link>
+            );
+          })}
 
-          return (
-            <Link
-              key={coffee._id}
-              to={
-                tableId
-                  ? `/coffee/${coffee._id}?table=${tableId}`
-                  : `/coffee/${coffee._id}`
-              }
-            >
-              <ItemCard
-                item={{
-                  ...coffee,
-                  id: coffee._id,
-                }}
-                image={images[imageIndex % images.length]}
-              />
-            </Link>
-          );
-        })}
+          {filteredItems.length === 0 && (
+            <p className="col-span-full py-16 text-center text-sm text-text-muted">
+              No coffees match your search.
+            </p>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export default function Loading() {
   const [progress, setProgress] = useState(0);
@@ -11,7 +12,7 @@ export default function Loading() {
           return 100;
         }
 
-        return prev + 2;
+        return prev + 7;
       });
     }, 100);
 
@@ -19,29 +20,26 @@ export default function Loading() {
   }, []);
 
   const message =
-    progress < 30
+    progress < 10
       ? "Preparing..."
       : progress < 70
         ? "Brewing your experience..."
         : "Almost ready...";
 
   return (
-    <div className="h-screen w-screen bg-[#DCE4D6] flex flex-col items-center justify-center ">
+    <div className="h-screen w-screen bg-background flex flex-col items-center justify-center ">
       <img
         alt="Kissa Mori"
         className="w-50 md:w-96 object-contain mb-12"
         src="/logo.png"
       ></img>
 
-      <div className="w-80 fade-in">
-        <div className="w-80 h-2 rounded-full bg-white/60 overflow-hidden shadow-inner">
-          <div
-            className="h-full rounded-full bg-[#3E4438] transition-all duration-100"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
+      <div className="flex flex-col items-center gap-4 fade-in">
+        <Loader2 className="size-8 animate-spin text-espresso" />
 
-        <p className="text-base text-[#5F665D] italic mb-6 mt-3">{message}</p>
+        <p className="font-serif text-base italic text-text-secondary">
+          {message}
+        </p>
       </div>
     </div>
   );

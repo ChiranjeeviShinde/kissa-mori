@@ -1,13 +1,65 @@
 @import "tailwindcss";
 
+:root {
+  /* Surfaces */
+  --background: #F5F3EE;
+  --surface: #FFFFFF;
+  --surface-muted: #ECE9E1;
+
+  /* Text */
+  --text-primary: #1C1B18;
+  --text-secondary: #716E67;
+  --text-muted: #A09C94;
+
+  /* UI */
+  --border: #DDD9D0;
+
+  /* Coffee palette */
+  --espresso: #2B1D16;
+  --coffee: #6F4E37;
+  --latte: #C49A6C;
+  --cream: #E9DDC8;
+
+  /* Brand */
+  --accent: #8B5E3C;
+  --accent-hover: #70482D;
+}
+
+@theme inline {
+  /* Surfaces */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+
+  /* Text */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  /* UI */
+  --color-border: var(--border);
+
+  /* Coffee */
+  --color-espresso: var(--espresso);
+  --color-coffee: var(--coffee);
+  --color-latte: var(--latte);
+  --color-cream: var(--cream);
+
+  /* Brand */
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+}
+
 @theme {
   --font-sans:
-    "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: "Fraunces", ui-serif, Georgia, serif;
 }
 
 body {
-  background-color: #f2f7f3;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
 }
 
 html,

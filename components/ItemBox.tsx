@@ -10,7 +10,11 @@ const ItemBox = ({ name, active, onClick }: ItemBoxProps) => {
   return (
     <button
       onClick={onClick}
-      className="flex h-10 w-35 border border-[#313733] shrink-0 items-center justify-center rounded-2xl bg-[#CFDBD1] p-2 text-center text-sm font-medium shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+      className={`shrink-0 whitespace-nowrap rounded-full cursor-pointer border px-5 py-2 text-xs font-medium uppercase tracking-wider transition ${
+        active
+          ? "border-espresso bg-espresso text-white shadow-sm"
+          : "border-border bg-surface text-text-secondary hover:border-espresso/40 hover:text-text-primary"
+      }`}
     >
       {name}
     </button>

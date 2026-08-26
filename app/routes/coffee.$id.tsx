@@ -1,6 +1,7 @@
 import { useFetcher, useParams, useSearchParams } from "react-router";
 import { useCoffee } from "../context/CoffeeContext";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import AddRemoveButtons from "../../components/AddRemoveButtons";
 import { useEffect } from "react";
 
@@ -11,7 +12,13 @@ export default function CoffeePage() {
   const coffee = coffees.find((c) => c._id === id);
 
   if (!coffee) {
-    return <h1>Coffee not found</h1>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <h1 className="font-serif text-2xl text-text-primary">
+          Coffee not found
+        </h1>
+      </div>
+    );
   }
   const [searchParams] = useSearchParams();
   const tableId = searchParams.get("table");
@@ -41,79 +48,107 @@ export default function CoffeePage() {
   };
 
   return (
-    <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-8 rounded-[40px] bg-[#F2F7F3] p-6 md:mt-10 md:flex-row md:gap-10 md:p-12">
-      <div className="w-fit shrink-0 md:w-[38%]">
-        <img
-          src="/coffee.jpg"
-          alt={coffee.name}
-          className="h-87.5 w-90 rounded-4xl object-cover md:h-145"
-        />
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
+        <button
+          onClick={() => navigate(`/table/${tableId}`)}
+          className="flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary"
+        >
+          <ArrowLeft size={16} />
+          Back to menu
+        </button>
       </div>
 
-      <div className="flex flex-1 flex-col">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold md:text-4xl">{coffee.name}</h1>
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 md:flex-row md:gap-12">
+        <div className="w-full shrink-0 md:w-[38%]">
+          <img
+            src="/coffee.jpg"
+            alt={coffee.name}
+            className="h-72 w-full rounded-2xl border border-border object-cover md:h-145"
+          />
+        </div>
 
-            <p className="mt-2 text-lg text-gray-500 md:text-xl">
-              {coffee.category}
+        <div className="flex flex-1 flex-col">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <span className="text-xs font-medium uppercase tracking-widest text-accent">
+                {coffee.category}
+              </span>
+
+              <h1 className="font-serif text-3xl font-medium text-text-primary md:text-4xl">
+                {coffee.name}
+              </h1>
+            </div>
+
+            <div className="flex items-center justify-between gap-4 sm:flex-col sm:items-end">
+              <p className="text-2xl font-semibold text-text-primary md:text-3xl">
+                ${coffee.price}
+              </p>
+
+              {quantity === 0 ? (
+                <button
+                  onClick={handleAddToCart}
+                  className="rounded-full bg-espresso px-6 py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover"
+                >
+                  Add to Cart
+                </button>
+              ) : (
+                <AddRemoveButtons
+                  item={{ ...coffee, qty: quantity }}
+                  tableId={tableId!}
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-2xl border border-border bg-surface p-6">
+            <h2 className="mb-3 font-serif text-xl font-medium text-text-primary">
+              Description
+            </h2>
+
+            <p className="leading-7 text-text-secondary">
+              {coffee.description}
             </p>
           </div>
 
-          <div className="flex items-center justify-between sm:block sm:text-right">
-            <p className="text-3xl font-bold md:text-4xl">${coffee.price}</p>
+          <div className="mt-6 rounded-2xl border border-border bg-surface p-6">
+            <h2 className="mb-3 font-serif text-xl font-medium text-text-primary">
+              Ingredients
+            </h2>
 
-            {quantity === 0 ? (
-              <button
-                onClick={handleAddToCart}
-                className="rounded-full bg-[#383C39] px-6 py-3 text-white transition hover:opacity-90 sm:mt-6"
-              >
-                Add to Cart
-              </button>
-            ) : (
-              <AddRemoveButtons
-                item={{ ...coffee, qty: quantity }}
-                tableId={tableId!}
-              />
-            )}
-          </div>
-        </div>
+            <p className="leading-7 text-text-secondary">
+              Premium Arabica beans, steamed milk, milk foam.
+            </p>
 
-        <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm">
-          <h2 className="mb-3 text-xl font-semibold">Description</h2>
+            <div className="mt-6 grid grid-cols-3 gap-4">
+              <div className="rounded-xl border border-border bg-background p-4 text-center">
+                <p className="text-xs uppercase tracking-wider text-text-muted">
+                  Size
+                </p>
+                <p className="mt-2 text-lg font-semibold text-text-primary">
+                  12 oz
+                </p>
+              </div>
 
-          <p className="leading-8 text-gray-600">{coffee.description}</p>
-        </div>
+              <div className="rounded-xl border border-border bg-background p-4 text-center">
+                <p className="text-xs uppercase tracking-wider text-text-muted">
+                  Calories
+                </p>
+                <p className="mt-2 text-lg font-semibold text-text-primary">
+                  140 kcal
+                </p>
+              </div>
 
-        <div className="mt-6 rounded-3xl bg-white p-6 shadow-sm">
-          <h2 className="mb-3 text-xl font-semibold">Ingredients</h2>
-
-          <p className="leading-7 text-gray-600">
-            Premium Arabica beans, steamed milk, milk foam.
-          </p>
-
-          <div className="mt-8 grid grid-cols-3 gap-4">
-            <div className="rounded-2xl border border-gray-100 bg-[#F9F9F9] p-4 text-center shadow-sm">
-              <p className="text-sm text-gray-500">Size</p>
-              <p className="mt-2 text-xl font-semibold">12 oz</p>
-            </div>
-
-            <div className="rounded-2xl border border-gray-100 bg-[#F9F9F9] p-4 text-center shadow-sm">
-              <p className="text-sm text-gray-500">Calories</p>
-              <p className="mt-2 text-xl font-semibold">140 kcal</p>
-            </div>
-
-            <div className="rounded-2xl border border-gray-100 bg-[#F9F9F9] p-4 text-center shadow-sm">
-              <p className="text-sm text-gray-500">Rating</p>
-              <p className="mt-2 text-xl font-semibold">⭐ 4.8</p>
+              <div className="rounded-xl border border-border bg-background p-4 text-center">
+                <p className="text-xs uppercase tracking-wider text-text-muted">
+                  Rating
+                </p>
+                <p className="mt-2 text-lg font-semibold text-text-primary">
+                  ⭐ 4.8
+                </p>
+              </div>
             </div>
           </div>
-          <button
-            onClick={() => navigate(`/table/${tableId}`)}
-            className="rounded-full bg-[#383C39] px-6 py-3 text-white transition hover:opacity-90 sm:mt-6"
-          >
-            Go Back
-          </button>
         </div>
       </div>
     </div>
