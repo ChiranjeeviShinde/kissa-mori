@@ -10,18 +10,18 @@ export default function Navbar() {
   return (
     <>
       <nav className="relative z-50">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setCartOpen(true)}
-            className="transition-transform duration-200 hover:scale-110 active:scale-95"
+            className="rounded-full border border-border bg-surface p-2.5 text-text-primary transition hover:border-espresso/40 active:scale-95"
           >
-            <ShoppingCart size={28} />
+            <ShoppingCart size={20} />
           </button>
           <button
             onClick={() => setOpen(!open)}
-            className="transition-transform duration-200 hover:scale-110 active:scale-95"
+            className="rounded-full border border-border bg-surface p-2.5 text-text-primary transition hover:border-espresso/40 active:scale-95"
           >
-            <Menu size={30} />
+            <Menu size={20} />
           </button>
         </div>
       </nav>

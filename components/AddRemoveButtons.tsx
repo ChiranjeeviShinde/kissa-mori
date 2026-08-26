@@ -24,24 +24,26 @@ const AddRemoveButtons = ({
     });
   };
   return (
-    <div className="flex items-center rounded-full border border-gray-300 bg-white">
+    <div className="flex items-center rounded-full border border-border bg-surface">
       <button
         onClick={() => handleRemoveItem(item._id)}
         disabled={item.qty === 1}
         className={`px-3 py-2 transition ${
           item.qty === 1
-            ? "cursor-not-allowed text-gray-300"
-            : "text-gray-700 hover:text-black"
+            ? "cursor-not-allowed text-text-muted"
+            : "text-text-secondary hover:text-text-primary"
         }`}
       >
         <Minus size={16} />
       </button>
 
-      <span className="w-8 text-center font-medium">{item.qty}</span>
+      <span className="w-8 text-center text-sm font-medium text-text-primary">
+        {item.qty}
+      </span>
 
       <button
         onClick={() => handleAddItem(item._id)}
-        className="px-3 py-2 transition"
+        className="px-3 py-2 text-text-secondary transition hover:text-text-primary"
       >
         <Plus size={16} />
       </button>

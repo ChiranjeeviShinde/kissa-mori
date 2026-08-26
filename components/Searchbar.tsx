@@ -1,3 +1,5 @@
+import { Search } from "lucide-react";
+
 type SearchBarProps = {
   value: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
@@ -5,13 +7,17 @@ type SearchBarProps = {
 
 export default function SearchBar({ value, onChange }: SearchBarProps) {
   return (
-    <div className="flex justify-center">
+    <div className="relative">
+      <Search
+        size={18}
+        className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-text-muted"
+      />
       <input
         type="text"
-        placeholder="Search..."
+        placeholder="Search the menu..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="m-3 w-full rounded-lg border bg-[#E9F1EC] px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full rounded-full border border-border bg-surface py-3 pl-11 pr-4 text-sm text-text-primary placeholder:text-text-muted outline-none transition focus:border-espresso"
       />
     </div>
   );

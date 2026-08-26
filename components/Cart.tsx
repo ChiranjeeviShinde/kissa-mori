@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Trash2, X } from "lucide-react";
+import { createPortal } from "react-dom";
 import { useFetcher, useParams } from "react-router";
 import AddRemoveButtons from "./AddRemoveButtons";
 
@@ -36,48 +37,66 @@ export default function Cart({ open, setOpen }: CartProps) {
     });
   };
 
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <>
       <div
         onClick={() => setOpen(false)}
-        className={`fixed inset-0 z-40 bg-black/20 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`fixed inset-0 z-60 bg-black/10 backdrop-blur-md transition-all duration-500 ease-out ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
 
       <div
-        className={`fixed top-0 right-0 z-50 flex h-screen w-96 flex-col border-l border-[#353634] bg-[#F2F7F3] shadow-2xl transition-all duration-300 ease-out ${
-          open ? "translate-x-0" : "translate-x-full"
+        className={`fixed top-0 right-0 z-70 flex h-screen w-96 flex-col border-l border-border bg-background transition-all duration-300 ease-out ${
+          open ? "translate-x-0 shadow-2xl" : "translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between border-b border-[#D9DED8] p-6">
-          <h2 className="text-2xl font-bold text-[#353634]">Your Cart</h2>
+        <div className="flex items-center justify-between border-b border-border p-6">
+          <h2 className="font-serif text-2xl font-medium text-text-primary">
+            Your Cart
+          </h2>
 
           <button
             onClick={() => setOpen(false)}
-            className="rounded-full p-2 transition duration-200 hover:rotate-90 hover:bg-[#E9F1EC] active:scale-90"
+            className="rounded-full p-2 transition duration-200 hover:rotate-90 hover:bg-surface-muted active:scale-90"
           >
-            <X size={28} />
+            <X size={24} />
           </button>
         </div>
 
         <div className="flex-1 space-y-4 overflow-y-auto p-5">
+          {cartItems.length === 0 && (
+            <p className="pt-10 text-center text-sm text-text-muted">
+              Your cart is empty.
+            </p>
+          )}
+
           {cartItems.map((item: any) => (
             <div
               key={item.coffeeId}
-              className="flex gap-4 rounded-3xl bg-[#FBF9F6] p-4 shadow-sm"
+              className="flex gap-4 rounded-2xl border border-border bg-surface p-4"
             >
               <img
                 src="/coffee.jpg"
                 alt={item.name}
-                className="h-24 w-24 rounded-2xl object-cover"
+                className="h-24 w-24 rounded-xl object-cover"
               />
 
               <div className="flex flex-1 flex-col justify-between">
                 <div>
-                  <h3 className="font-semibold text-[#353634]">{item.name}</h3>
+                  <h3 className="font-serif font-medium text-text-primary">
+                    {item.name}
+                  </h3>
 
-                  <p className="mt-1 text-sm text-gray-500">${item.price}</p>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    ${item.price}
+                  </p>
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -101,27 +120,28 @@ export default function Cart({ open, setOpen }: CartProps) {
           ))}
         </div>
 
-        <div className="border-t border-[#D9DED8] bg-[#F2F7F3] p-6">
-          <div className="mb-2 flex justify-between text-[#555]">
+        <div className="border-t border-border bg-background p-6">
+          <div className="mb-2 flex justify-between text-sm text-text-secondary">
             <span>Subtotal</span>
             <span>${total}</span>
           </div>
 
-          <div className="mb-2 flex justify-between text-[#555]">
+          <div className="mb-2 flex justify-between text-sm text-text-secondary">
             <span>Delivery</span>
             <span>Free</span>
           </div>
 
-          <div className="mb-6 flex justify-between text-xl font-bold text-[#353634]">
+          <div className="mb-6 flex justify-between font-serif text-xl font-medium text-text-primary">
             <span>Total</span>
             <span>${total}</span>
           </div>
 
-          <button className="w-full rounded-full bg-[#353634] py-3 text-lg font-semibold text-white transition hover:bg-[#232422]">
+          <button className="w-full rounded-full bg-espresso py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover">
             Checkout
           </button>
         </div>
       </div>
-    </>
+    </>,
+    document.body,
   );
 }
