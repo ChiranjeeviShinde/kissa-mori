@@ -2,10 +2,15 @@ import { Menu, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import Cart from "./Cart";
+import { useCoffee } from "../app/context/CoffeeContext";
 
-export default function Navbar() {
+type NavbarProps = {
+  images: string[];
+};
+
+export default function Navbar({ images }: NavbarProps) {
   const [open, setOpen] = useState(false);
-  const [openCart, setCartOpen] = useState(false);
+  const { openCart, setCartOpen } = useCoffee();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -50,7 +55,7 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
-      <Cart open={openCart} setOpen={setCartOpen} />
+      <Cart open={openCart} setOpen={setCartOpen} images={images} />
       <Sidebar open={open} setOpen={setOpen} />
     </>
   );

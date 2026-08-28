@@ -4,14 +4,17 @@ import { createPortal } from "react-dom";
 import { useFetcher, useParams } from "react-router";
 import AddRemoveButtons from "./AddRemoveButtons";
 import { useNavigate } from "react-router";
+import { useCoffee } from "../app/context/CoffeeContext";
 
 type CartProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  images: string[];
 };
 
-export default function Cart({ open, setOpen }: CartProps) {
+export default function Cart({ open, setOpen, images }: CartProps) {
   const { id: tableId } = useParams();
+  const { coffees } = useCoffee();
 
   const cartFetcher = useFetcher();
   const actionFetcher = useFetcher();
@@ -80,47 +83,52 @@ export default function Cart({ open, setOpen }: CartProps) {
             </p>
           )}
 
-          {cartItems.map((item: any) => (
-            <div
-              key={item.coffeeId}
-              className="flex gap-4 rounded-2xl border border-border bg-surface p-4"
-            >
-              <img
-                src="/coffee.jpg"
-                alt={item.name}
-                className="h-24 w-24 rounded-xl object-cover"
-              />
+          {cartItems.map((item: any) => {
+            const imageIndex = coffees.findIndex(
+              (coffee) => coffee._id === item.coffeeId,
+            );
+            return (
+              <div
+                key={item.coffeeId}
+                className="flex gap-4 rounded-2xl border border-border bg-surface p-4"
+              >
+                <img
+                  src={images[imageIndex]}
+                  alt={item.name}
+                  className="h-24 w-24 rounded-xl object-cover"
+                />
 
-              <div className="flex flex-1 flex-col justify-between">
-                <div>
-                  <h3 className="font-serif font-medium text-text-primary">
-                    {item.name}
-                  </h3>
+                <div className="flex flex-1 flex-col justify-between">
+                  <div>
+                    <h3 className="font-serif font-medium text-text-primary">
+                      {item.name}
+                    </h3>
 
-                  <p className="mt-1 text-sm text-text-secondary">
-                    ${item.price}
-                  </p>
-                </div>
+                    <p className="mt-1 text-sm text-text-secondary">
+                      ${item.price}
+                    </p>
+                  </div>
 
-                <div className="flex items-center justify-between">
-                  <AddRemoveButtons
-                    item={{
-                      ...item,
-                      _id: item.coffeeId,
-                    }}
-                    tableId={tableId!}
-                  />
+                  <div className="flex items-center justify-between">
+                    <AddRemoveButtons
+                      item={{
+                        ...item,
+                        _id: item.coffeeId,
+                      }}
+                      tableId={tableId!}
+                    />
 
-                  <button
-                    onClick={() => handleDeleteItem(item.coffeeId)}
-                    className="rounded-full p-2 text-red-500 transition hover:bg-red-50"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+                    <button
+                      onClick={() => handleDeleteItem(item.coffeeId)}
+                      className="rounded-full p-2 text-red-500 transition hover:bg-red-50"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="border-t border-border bg-background p-6">

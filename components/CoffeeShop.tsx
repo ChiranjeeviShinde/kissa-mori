@@ -8,6 +8,7 @@ import ItemCard from "./ItemCard";
 import ItemBox from "./ItemBox";
 
 import { useCoffee } from "../app/context/CoffeeContext";
+import { Outlet } from "react-router";
 
 type CoffeeShopProps = {
   images: string[];
@@ -79,7 +80,7 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
           <div className="flex flex-row items-center justify-between">
             <img src="/logo.png" className="w-36 sm:w-44" alt="Wash Coffee" />
 
-            <Navbar />
+            <Navbar images={images} />
           </div>
 
           <div className=" pb-4 pt-3">

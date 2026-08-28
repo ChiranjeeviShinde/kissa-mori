@@ -104,7 +104,11 @@ export default function CoffeePage() {
                 <button
                   onClick={handleAddToCart}
                   disabled={coffee.stock === 0}
-                  className="rounded-full bg-espresso px-6 py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover"
+                  className={`rounded-full px-6 py-3 text-sm font-medium uppercase tracking-wider transition ${
+                    coffee.stock === 0
+                      ? "bg-gray-200 text-gray-500 opacity-60 cursor-not-allowed"
+                      : "bg-espresso text-white hover:bg-accent-hover"
+                  }`}
                 >
                   {coffee.stock === 0 ? "Out of Stock" : "Add to Cart"}
                 </button>

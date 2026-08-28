@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 
 type Coffee = {
   _id: string;
@@ -15,6 +15,8 @@ type Coffee = {
 
 type CoffeeContextType = {
   coffees: Coffee[];
+  openCart: boolean;
+  setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const CoffeeContext = createContext<CoffeeContextType | null>(null);
@@ -26,8 +28,10 @@ export function CoffeeProvider({
   coffees: Coffee[];
   children: React.ReactNode;
 }) {
+  const [openCart, setCartOpen] = useState(false);
+
   return (
-    <CoffeeContext.Provider value={{ coffees }}>
+    <CoffeeContext.Provider value={{ coffees, openCart, setCartOpen }}>
       {children}
     </CoffeeContext.Provider>
   );
