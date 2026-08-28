@@ -7,6 +7,10 @@ type Coffee = {
   price: number;
   description: string;
   stock: number;
+  ingredients: string;
+  size: number;
+  cal: number;
+  rating: number;
 };
 
 type CoffeeContextType = {

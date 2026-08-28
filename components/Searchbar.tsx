@@ -3,9 +3,10 @@ import { Search } from "lucide-react";
 type SearchBarProps = {
   value: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
+  ref?: React.Ref<HTMLInputElement>;
 };
 
-export default function SearchBar({ value, onChange }: SearchBarProps) {
+export default function SearchBar({ value, onChange, ref }: SearchBarProps) {
   return (
     <div className="relative">
       <Search
@@ -17,6 +18,7 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
         placeholder="Search the menu..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        ref={ref}
         className="w-full rounded-full border border-border bg-surface py-3 pl-11 pr-4 text-sm text-text-primary placeholder:text-text-muted outline-none transition focus:border-espresso"
       />
     </div>

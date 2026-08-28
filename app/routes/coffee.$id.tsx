@@ -1,13 +1,28 @@
-import { useFetcher, useParams, useSearchParams } from "react-router";
+import { getCoffeeImages } from "../utils/s3.server";
+import type { Route } from "./+types/coffee.$id";
+import {
+  useFetcher,
+  useParams,
+  useSearchParams,
+  useLoaderData,
+} from "react-router";
 import { useCoffee } from "../context/CoffeeContext";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import AddRemoveButtons from "../../components/AddRemoveButtons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getImageFromRequest } from "../utils/image.server";
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const image = await getImageFromRequest(request, getCoffeeImages);
+
+  return { image };
+}
 
 export default function CoffeePage() {
   const { coffees } = useCoffee();
   const { id } = useParams();
+  const { image } = useLoaderData<typeof loader>();
 
   const coffee = coffees.find((c) => c._id === id);
 
@@ -62,7 +77,7 @@ export default function CoffeePage() {
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 md:flex-row md:gap-12">
         <div className="w-full shrink-0 md:w-[38%]">
           <img
-            src="/coffee.jpg"
+            src={image}
             alt={coffee.name}
             className="h-72 w-full rounded-2xl border border-border object-cover md:h-145"
           />
@@ -118,7 +133,7 @@ export default function CoffeePage() {
             </h2>
 
             <p className="leading-7 text-text-secondary">
-              Premium Arabica beans, steamed milk, milk foam.
+              {coffee.ingredients}
             </p>
 
             <div className="mt-6 grid grid-cols-3 gap-4">
@@ -127,7 +142,7 @@ export default function CoffeePage() {
                   Size
                 </p>
                 <p className="mt-2 text-lg font-semibold text-text-primary">
-                  12 oz
+                  {coffee.size} oz
                 </p>
               </div>
 
@@ -136,7 +151,7 @@ export default function CoffeePage() {
                   Calories
                 </p>
                 <p className="mt-2 text-lg font-semibold text-text-primary">
-                  140 kcal
+                  {coffee.cal} kcal
                 </p>
               </div>
 
@@ -145,7 +160,7 @@ export default function CoffeePage() {
                   Rating
                 </p>
                 <p className="mt-2 text-lg font-semibold text-text-primary">
-                  ⭐ 4.8
+                  {coffee.rating}
                 </p>
               </div>
             </div>

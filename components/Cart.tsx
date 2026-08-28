@@ -146,6 +146,7 @@ export default function Cart({ open, setOpen }: CartProps) {
                 navigate(`/table/${tableId}/checkout`);
               }
             }}
+            disabled={cartItems.length === 0}
             className="w-full rounded-full bg-espresso py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover"
           >
             Checkout

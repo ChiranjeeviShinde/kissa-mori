@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import Fuse from "fuse.js";
 
@@ -48,6 +48,30 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
     [search, fuse, categoryItems],
   );
 
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+
+      if (e.key === "/") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
@@ -59,7 +83,11 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
           </div>
 
           <div className=" pb-4 pt-3">
-            <SearchBar value={search} onChange={setSearch} />
+            <SearchBar
+              value={search}
+              onChange={setSearch}
+              ref={searchInputRef}
+            />
           </div>
         </div>
 
@@ -96,8 +124,8 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
                 key={coffee._id}
                 to={
                   tableId
-                    ? `/coffee/${coffee._id}?table=${tableId}`
-                    : `/coffee/${coffee._id}`
+                    ? `/coffee/${coffee._id}?table=${tableId}&image=${imageIndex}`
+                    : `/coffee/${coffee._id}?image=${imageIndex}`
                 }
               >
                 <ItemCard
