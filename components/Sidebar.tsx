@@ -1,22 +1,25 @@
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { Link, useParams } from "react-router";
 
 type SidebarProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const links = [
-  { name: "All Items", href: "/" },
-  { name: "About Us", href: "/about" },
-  { name: "Contact Us", href: "/contact" },
-];
-
 export default function Sidebar({ open, setOpen }: SidebarProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
+
+  const { id: tableId } = useParams();
+
+  const links = [
+    { name: "All Items", href: `/table/${tableId}` },
+    { name: "About Us", href: "/about" },
+    { name: "Contact Us", href: "/contact" },
+  ];
 
   if (!mounted) return null;
 
@@ -44,9 +47,9 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
 
         <div className="mt-4 flex flex-col">
           {links.map((link, index) => (
-            <a
+            <Link
               key={link.name}
-              href={link.href}
+              to={link.href}
               className="px-6 py-6 font-serif text-xl font-medium text-text-primary transition-all duration-300 hover:bg-surface-muted hover:pl-10 active:bg-surface-muted active:scale-[0.98]"
               style={{
                 transitionDelay: open ? `${index * 70}ms` : "0ms",
@@ -55,7 +58,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
               }}
             >
               {link.name}
-            </a>
+            </Link>
           ))}
         </div>
       </div>

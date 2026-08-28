@@ -20,4 +20,9 @@ export default [
     "api/table/:tableId/cart/:coffeeId/delete",
     "./routes/api.table.$tableId.cart.$coffeeId.delete.ts",
   ),
+  route("table/:id/checkout", "./routes/checkout.tsx"),
+  route(
+    "api/table/:tableId/checkout",
+    "./routes/api.table.$tableId.checkout.ts",
+  ),
 ] satisfies RouteConfig;

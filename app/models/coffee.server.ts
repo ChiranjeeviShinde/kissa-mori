@@ -5,7 +5,7 @@ const CoffeeSchema = new mongoose.Schema({
   category: String,
   price: Number,
   description: String,
-  qty: { type: Number, default: 0 },
+  stock: Number,
 });
 
 export default mongoose.models.Coffee || mongoose.model("Coffee", CoffeeSchema);

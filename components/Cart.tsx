@@ -3,6 +3,7 @@ import { Trash2, X } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useFetcher, useParams } from "react-router";
 import AddRemoveButtons from "./AddRemoveButtons";
+import { useNavigate } from "react-router";
 
 type CartProps = {
   open: boolean;
@@ -14,6 +15,8 @@ export default function Cart({ open, setOpen }: CartProps) {
 
   const cartFetcher = useFetcher();
   const actionFetcher = useFetcher();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (tableId) {
@@ -136,7 +139,15 @@ export default function Cart({ open, setOpen }: CartProps) {
             <span>${total}</span>
           </div>
 
-          <button className="w-full rounded-full bg-espresso py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover">
+          <button
+            onClick={() => {
+              if (tableId) {
+                setOpen(false);
+                navigate(`/table/${tableId}/checkout`);
+              }
+            }}
+            className="w-full rounded-full bg-espresso py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover"
+          >
             Checkout
           </button>
         </div>

@@ -88,9 +88,10 @@ export default function CoffeePage() {
               {quantity === 0 ? (
                 <button
                   onClick={handleAddToCart}
+                  disabled={coffee.stock === 0}
                   className="rounded-full bg-espresso px-6 py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover"
                 >
-                  Add to Cart
+                  {coffee.stock === 0 ? "Out of Stock" : "Add to Cart"}
                 </button>
               ) : (
                 <AddRemoveButtons
@@ -148,6 +149,19 @@ export default function CoffeePage() {
                 </p>
               </div>
             </div>
+            {coffee.stock <= 3 && coffee.stock > 0 && (
+              <div className="mt-4 flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700">
+                <span className="h-2 w-2 rounded-full bg-amber-500" />
+                Only {coffee.stock} left in stock
+              </div>
+            )}
+
+            {coffee.stock === 0 && (
+              <div className="mt-4 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+                <span className="h-2 w-2 rounded-full bg-red-500" />
+                Out of stock
+              </div>
+            )}
           </div>
         </div>
       </div>
