@@ -21,7 +21,7 @@ export default function Navbar({ images }: NavbarProps) {
         return;
       }
 
-      if (e.key === "c") {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         setCartOpen(true);
       }
 

@@ -93,7 +93,7 @@ export default function Cart({ open, setOpen, images }: CartProps) {
                 className="flex gap-4 rounded-2xl border border-border bg-surface p-4"
               >
                 <img
-                  src={images[imageIndex]}
+                  src={images[imageIndex % images.length]}
                   alt={item.name}
                   className="h-24 w-24 rounded-xl object-cover"
                 />

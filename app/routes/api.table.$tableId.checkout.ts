@@ -1,12 +1,28 @@
 import TableCart from "../models/tableCart.server";
 import Coffee from "../models/coffee.server";
 import { connectDB } from "../db.server";
+import { auth } from "../lib/auth.server";
 
-export async function action({ params }: any) {
+export async function action({ request, params }: any) {
   try {
+    const session = await auth.api.getSession({
+      headers: request.headers,
+    });
+
+    if (!session?.user) {
+      return Response.json(
+        { message: "You must be logged in" },
+        { status: 401 },
+      );
+    }
+
     await connectDB();
 
     const tableId = params.tableId;
+    const userId = session.user.id;
+
+    // console.log("Checkout user:", userId);
+    // console.log("Checkout phone:", session.user.phoneNumber);
 
     const cart = await TableCart.findOne({ tableId });
 
@@ -34,11 +50,13 @@ export async function action({ params }: any) {
     }
 
     cart.items = [];
+
     await cart.save();
 
     return Response.json({
       success: true,
       message: "Order placed successfully",
+      userId,
     });
   } catch (error) {
     console.error(error);

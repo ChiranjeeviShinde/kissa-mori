@@ -8,7 +8,7 @@ import ItemCard from "./ItemCard";
 import ItemBox from "./ItemBox";
 
 import { useCoffee } from "../app/context/CoffeeContext";
-import { Outlet } from "react-router";
+import { authClient } from "../app/lib/auth-client";
 
 type CoffeeShopProps = {
   images: string[];
@@ -20,6 +20,8 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
   const [search, setSearch] = useState("");
 
   const { coffees } = useCoffee();
+
+  const { data: session, isPending } = authClient.useSession();
 
   const categories = useMemo(
     () => ["All", ...new Set(coffees.map((coffee) => coffee.category))],
@@ -73,6 +75,9 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
     };
   }, []);
 
+  const isGuest =
+    tableId && sessionStorage.getItem(`guest-${tableId}`) === "true";
+
   return (
     <div className="min-h-screen bg-background">
       <div className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
@@ -83,7 +88,23 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
             <Navbar images={images} />
           </div>
 
-          <div className=" pb-4 pt-3">
+          <div className="flex col gap-2">
+            {session?.user ? (
+              <span>Signed in as {session.user.phoneNumber}</span>
+            ) : isGuest ? (
+              <span>Guest</span>
+            ) : null}
+
+            {session?.user && (
+              <button
+                onClick={() => authClient.signOut()}
+                className="text-sm text-text-secondary hover:text-text-primary"
+              >
+                Sign out
+              </button>
+            )}
+          </div>
+          <div className="pb-4 pt-3">
             <SearchBar
               value={search}
               onChange={setSearch}
@@ -130,11 +151,9 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
                 }
               >
                 <ItemCard
-                  item={{
-                    ...coffee,
-                    id: coffee._id,
-                  }}
+                  id={coffee._id}
                   image={images[imageIndex % images.length]}
+                  tableId={tableId}
                 />
               </Link>
             );

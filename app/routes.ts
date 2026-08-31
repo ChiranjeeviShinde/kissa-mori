@@ -5,6 +5,7 @@ export default [
   route("loading", "./routes/loading.tsx"),
   route("coffee/:id", "./routes/coffee.$id.tsx"),
   route("table/:id", "./routes/table.$id.tsx"),
+  route("api/auth/*", "./routes/api.auth.ts"),
   route("api/tables", "./routes/api.tables.ts"),
   route(
     "api/table/:tableId/cart/:coffeeId",
@@ -25,4 +26,5 @@ export default [
     "api/table/:tableId/checkout",
     "./routes/api.table.$tableId.checkout.ts",
   ),
+  route("login", "./routes/login.tsx"),
 ] satisfies RouteConfig;
