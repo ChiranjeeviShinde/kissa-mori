@@ -126,7 +126,7 @@ export default function Checkout() {
               navigate(-1);
               setCartOpen(true);
             }}
-            className="mt-6 mb-6 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary"
+            className="mt-6 mb-6 rounded-full cursor-pointer border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary"
           >
             ← Back to Cart
           </button>

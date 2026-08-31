@@ -67,7 +67,7 @@ export default function CoffeePage() {
       <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
         <button
           onClick={() => navigate(`/table/${tableId}`)}
-          className="flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary"
+          className="flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary cursor-pointer"
         >
           <ArrowLeft size={16} />
           Back to menu
@@ -104,7 +104,7 @@ export default function CoffeePage() {
                 <button
                   onClick={handleAddToCart}
                   disabled={coffee.stock === 0}
-                  className={`rounded-full px-6 py-3 text-sm font-medium uppercase tracking-wider transition ${
+                  className={`cursor-pointer rounded-full px-6 py-3 text-sm font-medium uppercase tracking-wider transition ${
                     coffee.stock === 0
                       ? "bg-gray-200 text-gray-500 opacity-60 cursor-not-allowed"
                       : "bg-espresso text-white hover:bg-accent-hover"

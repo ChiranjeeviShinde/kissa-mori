@@ -32,7 +32,7 @@ const AddRemoveButtons = ({
       <button
         onClick={() => handleRemoveItem(item._id)}
         disabled={item.qty === 1}
-        className={`px-3 py-2 transition ${
+        className={`px-3 py-2 transition cursor-pointer ${
           item.qty === 1
             ? "cursor-not-allowed text-text-muted"
             : "text-text-secondary hover:text-text-primary"
@@ -48,7 +48,7 @@ const AddRemoveButtons = ({
       <button
         onClick={() => handleAddItem(item._id)}
         disabled={item.qty >= item.stock || item.qty >= 6}
-        className={`px-3 py-2 transition ${
+        className={`px-3 py-2 transition cursor-pointer ${
           item.qty >= item.stock || item.qty >= 6
             ? "cursor-not-allowed text-text-muted"
             : "text-text-secondary hover:text-text-primary"

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Trash2, X } from "lucide-react";
+import { X } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useFetcher, useParams } from "react-router";
 import AddRemoveButtons from "./AddRemoveButtons";
 import { useNavigate } from "react-router";
 import { useCoffee } from "../app/context/CoffeeContext";
+import DeleteButton from "./DeleteButton";
 
 type CartProps = {
   open: boolean;
@@ -17,7 +18,6 @@ export default function Cart({ open, setOpen, images }: CartProps) {
   const { coffees } = useCoffee();
 
   const cartFetcher = useFetcher();
-  const actionFetcher = useFetcher();
 
   const navigate = useNavigate();
 
@@ -33,15 +33,6 @@ export default function Cart({ open, setOpen, images }: CartProps) {
     (sum: number, item: any) => sum + item.price * item.qty,
     0,
   );
-
-  const handleDeleteItem = (coffeeId: string) => {
-    if (!tableId) return;
-
-    actionFetcher.submit(null, {
-      method: "post",
-      action: `/api/table/${tableId}/cart/${coffeeId}/delete`,
-    });
-  };
 
   const [mounted, setMounted] = useState(false);
 
@@ -118,12 +109,13 @@ export default function Cart({ open, setOpen, images }: CartProps) {
                       tableId={tableId!}
                     />
 
-                    <button
-                      onClick={() => handleDeleteItem(item.coffeeId)}
-                      className="rounded-full p-2 text-red-500 transition hover:bg-red-50"
-                    >
-                      <Trash2 size={18} />
-                    </button>
+                    <DeleteButton
+                      item={{
+                        ...item,
+                        _id: item.coffeeId,
+                      }}
+                      tableId={tableId!}
+                    />
                   </div>
                 </div>
               </div>
@@ -155,7 +147,7 @@ export default function Cart({ open, setOpen, images }: CartProps) {
               }
             }}
             disabled={cartItems.length === 0}
-            className="w-full rounded-full bg-espresso py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover"
+            className="w-full rounded-full bg-espresso py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover cursor-pointer"
           >
             Checkout
           </button>

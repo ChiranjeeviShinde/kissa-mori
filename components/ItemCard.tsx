@@ -78,7 +78,7 @@ const ItemCard = ({ id, image, tableId }: ItemCardProps) => {
 
           <span>
             {item.stock === 0 ? (
-              <span className="rounded-full bg-espresso px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-white">
+              <span className="rounded-full px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider bg-gray-200 text-gray-500 opacity-60 cursor-not-allowed">
                 Out of Stock
               </span>
             ) : quantity === 0 ? (
@@ -88,7 +88,7 @@ const ItemCard = ({ id, image, tableId }: ItemCardProps) => {
                   e.stopPropagation();
                   handleAddToCart();
                 }}
-                className="rounded-full bg-espresso px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-white transition group-hover:bg-accent-hover"
+                className="cursor-pointer rounded-full bg-espresso px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-white transition group-hover:bg-accent-hover"
               >
                 Add to Cart
               </button>
