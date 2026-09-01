@@ -26,5 +26,4 @@ export default [
     "api/table/:tableId/checkout",
     "./routes/api.table.$tableId.checkout.ts",
   ),
-  route("login", "./routes/login.tsx"),
 ] satisfies RouteConfig;

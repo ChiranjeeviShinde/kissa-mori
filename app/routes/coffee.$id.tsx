@@ -12,6 +12,7 @@ import { ArrowLeft } from "lucide-react";
 import AddRemoveButtons from "../../components/AddRemoveButtons";
 import { useEffect, useState } from "react";
 import { getImageFromRequest } from "../utils/image.server";
+import DeleteButton from "../../components/DeleteButton";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const image = await getImageFromRequest(request, getCoffeeImages);
@@ -99,25 +100,30 @@ export default function CoffeePage() {
               <p className="text-2xl font-semibold text-text-primary md:text-3xl">
                 ${coffee.price}
               </p>
-
-              {quantity === 0 ? (
-                <button
-                  onClick={handleAddToCart}
-                  disabled={coffee.stock === 0}
-                  className={`cursor-pointer rounded-full px-6 py-3 text-sm font-medium uppercase tracking-wider transition ${
-                    coffee.stock === 0
-                      ? "bg-gray-200 text-gray-500 opacity-60 cursor-not-allowed"
-                      : "bg-espresso text-white hover:bg-accent-hover"
-                  }`}
-                >
-                  {coffee.stock === 0 ? "Out of Stock" : "Add to Cart"}
-                </button>
-              ) : (
-                <AddRemoveButtons
+              <div className="flex items-center gap-4">
+                {quantity === 0 ? (
+                  <button
+                    onClick={handleAddToCart}
+                    disabled={coffee.stock === 0}
+                    className={`cursor-pointer rounded-full px-6 py-3 text-sm font-medium uppercase tracking-wider transition ${
+                      coffee.stock === 0
+                        ? "bg-gray-200 text-gray-500 opacity-60 cursor-not-allowed"
+                        : "bg-espresso text-white hover:bg-accent-hover"
+                    }`}
+                  >
+                    {coffee.stock === 0 ? "Out of Stock" : "Add to Cart"}
+                  </button>
+                ) : (
+                  <AddRemoveButtons
+                    item={{ ...coffee, qty: quantity }}
+                    tableId={tableId!}
+                  />
+                )}
+                <DeleteButton
                   item={{ ...coffee, qty: quantity }}
                   tableId={tableId!}
                 />
-              )}
+              </div>
             </div>
           </div>
 
