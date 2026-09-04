@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import SearchBar from "./Searchbar";
 import ItemCard from "./ItemCard";
 import ItemBox from "./ItemBox";
+import Footer from "./Footer";
 
 import { useCoffee } from "../app/context/CoffeeContext";
 import { authClient } from "../app/lib/auth-client";
@@ -166,6 +167,7 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

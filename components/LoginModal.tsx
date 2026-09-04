@@ -129,13 +129,20 @@ export default function LoginModal({
     setError("OTP resent successfully");
   }
 
+  const hour = new Date().getHours();
+
+  const greeting =
+    hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 px-4">
       <div className="relative w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl">
         <div className="mb-8 text-center">
           <h2 className="text-2xl font-semibold text-[#2c211b]">
             Welcome to Kissa Mori
           </h2>
+
+          <h3 className="mt-2 text-lg font-medium text-[#3b261c]">{greeting}</h3>
 
           <p className="mt-2 text-sm text-gray-500">
             {otpSent

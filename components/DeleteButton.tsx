@@ -1,17 +1,29 @@
 import { Trash2 } from "lucide-react";
 import { useFetcher } from "react-router";
 
-const DeleteButton = ({ item, tableId }: { item: any; tableId: string }) => {
+const DeleteButton = ({
+  item,
+  tableId,
+  onDelete,
+}: {
+  item: any;
+  tableId: string;
+  onDelete: (coffeeId: string) => void;
+}) => {
   const actionFetcher = useFetcher();
 
   const handleDeleteItem = (coffeeId: string) => {
     if (!tableId) return;
+
+    // Remove from UI immediately
+    onDelete(coffeeId);
 
     actionFetcher.submit(null, {
       method: "post",
       action: `/api/table/${tableId}/cart/${coffeeId}/delete`,
     });
   };
+
   return (
     <button
       onClick={() => handleDeleteItem(item.coffeeId)}

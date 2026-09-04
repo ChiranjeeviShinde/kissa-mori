@@ -1,4 +1,5 @@
 import { Minus, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 
 const AddRemoveButtons = ({
@@ -10,9 +11,13 @@ const AddRemoveButtons = ({
 }) => {
   const fetcher = useFetcher();
 
+  const [displayQuantity, setDisplayQuantity] = useState<number>(item.qty);
+
   const handleAddItem = (id: string) => {
-    if (item.qty >= item.stock) return;
-    if (item.qty >= 6) return;
+    if (displayQuantity >= item.stock) return;
+    if (displayQuantity >= 6) return;
+
+    setDisplayQuantity((prev: number) => prev + 1);
 
     fetcher.submit(null, {
       method: "post",
@@ -21,19 +26,32 @@ const AddRemoveButtons = ({
   };
 
   const handleRemoveItem = (id: string) => {
+    if (displayQuantity <= 1) return;
+
+    setDisplayQuantity((prev: number) => prev - 1);
+
     fetcher.submit(null, {
       method: "post",
       action: `/api/table/${tableId}/cart/${id}/remove`,
     });
   };
 
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data) {
+      window.dispatchEvent(new Event("cart-updated"));
+    }
+  }, [fetcher.state, fetcher.data]);
+
+  const atMinimum = displayQuantity <= 1;
+  const atMaximum = displayQuantity >= item.stock || displayQuantity >= 6;
+
   return (
     <div className="flex items-center rounded-full border border-border bg-surface">
       <button
         onClick={() => handleRemoveItem(item._id)}
-        disabled={item.qty === 1}
-        className={`px-3 py-2 transition cursor-pointer ${
-          item.qty === 1
+        disabled={atMinimum}
+        className={`cursor-pointer px-3 py-2 transition ${
+          atMinimum
             ? "cursor-not-allowed text-text-muted"
             : "text-text-secondary hover:text-text-primary"
         }`}
@@ -42,14 +60,14 @@ const AddRemoveButtons = ({
       </button>
 
       <span className="w-8 text-center text-sm font-medium text-text-primary">
-        {item.qty}
+        {displayQuantity}
       </span>
 
       <button
         onClick={() => handleAddItem(item._id)}
-        disabled={item.qty >= item.stock || item.qty >= 6}
-        className={`px-3 py-2 transition cursor-pointer ${
-          item.qty >= item.stock || item.qty >= 6
+        disabled={atMaximum}
+        className={`cursor-pointer px-3 py-2 transition ${
+          atMaximum
             ? "cursor-not-allowed text-text-muted"
             : "text-text-secondary hover:text-text-primary"
         }`}

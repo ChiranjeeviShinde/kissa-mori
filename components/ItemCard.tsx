@@ -1,7 +1,7 @@
 import { useFetcher, useSearchParams } from "react-router";
 import { useCoffee } from "../app/context/CoffeeContext";
 import AddRemoveButtons from "./AddRemoveButtons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type ItemCardProps = {
   id: string;
@@ -25,6 +25,8 @@ const ItemCard = ({ id, image, tableId }: ItemCardProps) => {
     }
   }, [tableId]);
 
+  const cartLoaded = cartFetcher.data !== undefined;
+
   const cartItems = cartFetcher.data?.items ?? [];
 
   const cartItem = cartItems.find(
@@ -33,11 +35,25 @@ const ItemCard = ({ id, image, tableId }: ItemCardProps) => {
 
   const quantity = cartItem?.qty ?? 0;
 
+  useEffect(() => {
+    if (tableId && actionFetcher.state === "idle" && actionFetcher.data) {
+      cartFetcher.load(`/api/table/${tableId}/cart`);
+    }
+  }, [actionFetcher.state, actionFetcher.data, tableId]);
+
+  useEffect(() => {
+    if (actionFetcher.state === "idle" && actionFetcher.data) {
+      window.dispatchEvent(new Event("cart-updated"));
+    }
+  }, [actionFetcher.state, actionFetcher.data]);
+
   const handleAddToCart = () => {
     if (!tableId) {
       console.error("No tableId found");
       return;
     }
+
+    if (actionFetcher.state !== "idle") return;
 
     actionFetcher.submit(null, {
       method: "post",
@@ -78,16 +94,17 @@ const ItemCard = ({ id, image, tableId }: ItemCardProps) => {
 
           <span>
             {item.stock === 0 ? (
-              <span className="rounded-full px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider bg-gray-200 text-gray-500 opacity-60 cursor-not-allowed">
+              <span className="rounded-full bg-gray-200 px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-gray-500">
                 Out of Stock
               </span>
-            ) : quantity === 0 ? (
+            ) : !cartLoaded ? null : quantity === 0 ? (
               <button
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   handleAddToCart();
                 }}
+                disabled={actionFetcher.state !== "idle"}
                 className="cursor-pointer rounded-full bg-espresso px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-white transition group-hover:bg-accent-hover"
               >
                 Add to Cart
@@ -100,7 +117,10 @@ const ItemCard = ({ id, image, tableId }: ItemCardProps) => {
                 }}
               >
                 <AddRemoveButtons
-                  item={{ ...item, qty: quantity }}
+                  item={{
+                    ...item,
+                    qty: quantity,
+                  }}
                   tableId={tableId!}
                 />
               </div>

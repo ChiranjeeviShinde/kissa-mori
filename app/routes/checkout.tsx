@@ -50,6 +50,15 @@ export default function Checkout() {
     <>
       <div className="min-h-screen bg-background px-6 py-10">
         <div className="mx-auto max-w-3xl">
+          <button
+            onClick={() => {
+              navigate(-1);
+              setCartOpen(true);
+            }}
+            className="mt-6 mb-6 rounded-full cursor-pointer border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary"
+          >
+            ← Back to Cart
+          </button>
           <h1 className="mb-8 font-serif text-3xl font-medium text-text-primary">
             Checkout
           </h1>
@@ -121,15 +130,6 @@ export default function Checkout() {
               </div>
             </>
           )}
-          <button
-            onClick={() => {
-              navigate(-1);
-              setCartOpen(true);
-            }}
-            className="mt-6 mb-6 rounded-full cursor-pointer border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary"
-          >
-            ← Back to Cart
-          </button>
         </div>
       </div>
       {showLogin && tableId && (

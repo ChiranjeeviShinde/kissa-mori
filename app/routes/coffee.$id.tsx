@@ -57,6 +57,8 @@ export default function CoffeePage() {
   const quantity = cartItem?.qty ?? 0;
 
   const handleAddToCart = () => {
+    if (actionFetcher.state !== "idle") return;
+
     actionFetcher.submit(null, {
       method: "post",
       action: `/api/table/${tableId}/cart/${coffee._id}`,
@@ -104,7 +106,9 @@ export default function CoffeePage() {
                 {quantity === 0 ? (
                   <button
                     onClick={handleAddToCart}
-                    disabled={coffee.stock === 0}
+                    disabled={
+                      coffee.stock === 0 || actionFetcher.state !== "idle"
+                    }
                     className={`cursor-pointer rounded-full px-6 py-3 text-sm font-medium uppercase tracking-wider transition ${
                       coffee.stock === 0
                         ? "bg-gray-200 text-gray-500 opacity-60 cursor-not-allowed"
@@ -119,10 +123,6 @@ export default function CoffeePage() {
                     tableId={tableId!}
                   />
                 )}
-                <DeleteButton
-                  item={{ ...coffee, qty: quantity }}
-                  tableId={tableId!}
-                />
               </div>
             </div>
           </div>
