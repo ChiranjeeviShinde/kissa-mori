@@ -70,7 +70,7 @@ const ItemCard = ({ id, image, tableId }: ItemCardProps) => {
 
           <span>
             {item.stock === 0 ? (
-              <span className="rounded-full bg-gray-200 px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-gray-500">
+              <span className="rounded-full bg-gray-200 px-2.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-gray-500 sm:px-3 sm:text-[11px]">
                 Out of Stock
               </span>
             ) : quantity === 0 ? (
@@ -81,7 +81,7 @@ const ItemCard = ({ id, image, tableId }: ItemCardProps) => {
                   handleAddToCart();
                 }}
                 disabled={actionFetcher.state !== "idle"}
-                className="cursor-pointer rounded-full bg-espresso px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-white transition group-hover:bg-accent-hover"
+                className="cursor-pointer rounded-full bg-espresso px-2.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-white transition group-hover:bg-accent-hover sm:px-3 sm:text-[11px]"
               >
                 Add to Cart
               </button>
