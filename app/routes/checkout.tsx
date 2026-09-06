@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useFetcher, useParams } from "react-router";
-import { useNavigate } from "react-router";
+import { useFetcher, useNavigate, useParams } from "react-router";
 import { useCoffee } from "../../app/context/CoffeeContext";
 import { authClient } from "../../app/lib/auth-client";
 import LoginModal from "../../components/LoginModal";
@@ -8,26 +7,18 @@ import LoginModal from "../../components/LoginModal";
 export default function Checkout() {
   const { id: tableId } = useParams();
 
-  const cartFetcher = useFetcher();
   const checkoutFetcher = useFetcher();
-
   const navigate = useNavigate();
 
   const { data: session, isPending } = authClient.useSession();
-
   const [showLogin, setShowLogin] = useState(false);
 
-  useEffect(() => {
-    if (tableId) {
-      cartFetcher.load(`/api/table/${tableId}/cart`);
-    }
-  }, [tableId]);
+  const { cartItems, setCartItems, setCartOpen } = useCoffee();
 
-  useEffect(() => {
-    if (checkoutFetcher.data?.success && tableId) {
-      cartFetcher.load(`/api/table/${tableId}/cart`);
-    }
-  }, [checkoutFetcher.data, tableId]);
+  const total = cartItems.reduce(
+    (sum: number, item: any) => sum + item.price * item.qty,
+    0,
+  );
 
   useEffect(() => {
     if (isPending) return;
@@ -37,14 +28,13 @@ export default function Checkout() {
     }
   }, [session, isPending]);
 
-  const cartItems = cartFetcher.data?.items ?? [];
-
-  const total = cartItems.reduce(
-    (sum: number, item: any) => sum + item.price * item.qty,
-    0,
-  );
-
-  const { setCartOpen } = useCoffee();
+  useEffect(() => {
+    if (checkoutFetcher.data?.success && tableId) {
+      setCartItems([]);
+      setCartOpen(false);
+      navigate(-1);
+    }
+  }, [checkoutFetcher.data, tableId, setCartItems, setCartOpen, navigate]);
 
   return (
     <>
@@ -55,10 +45,11 @@ export default function Checkout() {
               navigate(-1);
               setCartOpen(true);
             }}
-            className="mt-6 mb-6 rounded-full cursor-pointer border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary"
+            className="mt-6 mb-6 cursor-pointer rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary"
           >
             ← Back to Cart
           </button>
+
           <h1 className="mb-8 font-serif text-3xl font-medium text-text-primary">
             Checkout
           </h1>
@@ -116,8 +107,6 @@ export default function Checkout() {
                         method: "post",
                         action: `/api/table/${tableId}/checkout`,
                       });
-
-                      navigate(-1);
                     }}
                     disabled={checkoutFetcher.state !== "idle"}
                     className="mt-6 w-full rounded-full bg-espresso py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover disabled:opacity-50"
@@ -132,6 +121,7 @@ export default function Checkout() {
           )}
         </div>
       </div>
+
       {showLogin && tableId && (
         <LoginModal
           tableId={tableId}
