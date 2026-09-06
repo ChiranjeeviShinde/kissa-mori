@@ -1,18 +1,13 @@
 import { getCoffeeImages } from "../utils/s3.server";
 import type { Route } from "./+types/coffee.$id";
-import {
-  useFetcher,
-  useParams,
-  useSearchParams,
-  useLoaderData,
-} from "react-router";
+
+import { useParams, useSearchParams, useLoaderData } from "react-router";
+
 import { useCoffee } from "../context/CoffeeContext";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import AddRemoveButtons from "../../components/AddRemoveButtons";
-import { useEffect, useState } from "react";
 import { getImageFromRequest } from "../utils/image.server";
-import DeleteButton from "../../components/DeleteButton";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const image = await getImageFromRequest(request, getCoffeeImages);
@@ -21,9 +16,17 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function CoffeePage() {
-  const { coffees } = useCoffee();
+  const { coffees, cartItems, updateCartQuantity } = useCoffee();
+
   const { id } = useParams();
+
   const { image } = useLoaderData<typeof loader>();
+
+  const [searchParams] = useSearchParams();
+
+  const tableId = searchParams.get("table");
+
+  const navigate = useNavigate();
 
   const coffee = coffees.find((c) => c._id === id);
 
@@ -36,32 +39,18 @@ export default function CoffeePage() {
       </div>
     );
   }
-  const [searchParams] = useSearchParams();
-  const tableId = searchParams.get("table");
 
-  const navigate = useNavigate();
-
-  const cartFetcher = useFetcher();
-  const actionFetcher = useFetcher();
-
-  useEffect(() => {
-    if (tableId) {
-      cartFetcher.load(`/api/table/${tableId}/cart`);
-    }
-  }, [tableId]);
-
-  const cartItems = cartFetcher.data?.items ?? [];
-
-  const cartItem = cartItems.find((item: any) => item.coffeeId === coffee._id);
+  const cartItem = cartItems.find((item) => item.coffeeId === coffee._id);
 
   const quantity = cartItem?.qty ?? 0;
 
   const handleAddToCart = () => {
-    if (actionFetcher.state !== "idle") return;
+    if (!tableId) return;
 
-    actionFetcher.submit(null, {
-      method: "post",
-      action: `/api/table/${tableId}/cart/${coffee._id}`,
+    updateCartQuantity(coffee._id, 1);
+
+    fetch(`/api/table/${tableId}/cart/${coffee._id}`, {
+      method: "POST",
     });
   };
 
@@ -70,7 +59,7 @@ export default function CoffeePage() {
       <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
         <button
           onClick={() => navigate(`/table/${tableId}`)}
-          className="flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary cursor-pointer"
+          className="flex cursor-pointer items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary"
         >
           <ArrowLeft size={16} />
           Back to menu
@@ -102,26 +91,22 @@ export default function CoffeePage() {
               <p className="text-2xl font-semibold text-text-primary md:text-3xl">
                 ${coffee.price}
               </p>
+
               <div className="flex items-center gap-4">
                 {quantity === 0 ? (
                   <button
                     onClick={handleAddToCart}
-                    disabled={
-                      coffee.stock === 0 || actionFetcher.state !== "idle"
-                    }
+                    disabled={coffee.stock === 0}
                     className={`cursor-pointer rounded-full px-6 py-3 text-sm font-medium uppercase tracking-wider transition ${
                       coffee.stock === 0
-                        ? "bg-gray-200 text-gray-500 opacity-60 cursor-not-allowed"
+                        ? "cursor-not-allowed bg-gray-200 text-gray-500 opacity-60"
                         : "bg-espresso text-white hover:bg-accent-hover"
                     }`}
                   >
                     {coffee.stock === 0 ? "Out of Stock" : "Add to Cart"}
                   </button>
                 ) : (
-                  <AddRemoveButtons
-                    item={{ ...coffee, qty: quantity }}
-                    tableId={tableId!}
-                  />
+                  <AddRemoveButtons item={coffee} tableId={tableId!} />
                 )}
               </div>
             </div>
@@ -151,6 +136,7 @@ export default function CoffeePage() {
                 <p className="text-xs uppercase tracking-wider text-text-muted">
                   Size
                 </p>
+
                 <p className="mt-2 text-lg font-semibold text-text-primary">
                   {coffee.size} oz
                 </p>
@@ -160,6 +146,7 @@ export default function CoffeePage() {
                 <p className="text-xs uppercase tracking-wider text-text-muted">
                   Calories
                 </p>
+
                 <p className="mt-2 text-lg font-semibold text-text-primary">
                   {coffee.cal} kcal
                 </p>
@@ -169,11 +156,13 @@ export default function CoffeePage() {
                 <p className="text-xs uppercase tracking-wider text-text-muted">
                   Rating
                 </p>
+
                 <p className="mt-2 text-lg font-semibold text-text-primary">
                   {coffee.rating}
                 </p>
               </div>
             </div>
+
             {coffee.stock <= 3 && coffee.stock > 0 && (
               <div className="mt-4 flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700">
                 <span className="h-2 w-2 rounded-full bg-amber-500" />

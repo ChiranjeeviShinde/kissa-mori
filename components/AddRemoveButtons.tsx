@@ -1,6 +1,7 @@
 import { Minus, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFetcher } from "react-router";
+import { useCoffee } from "../app/context/CoffeeContext";
 
 const AddRemoveButtons = ({
   item,
@@ -11,13 +12,16 @@ const AddRemoveButtons = ({
 }) => {
   const fetcher = useFetcher();
 
-  const [displayQuantity, setDisplayQuantity] = useState<number>(item.qty);
+  const { cartItems, updateCartQuantity, cartLoaded } = useCoffee();
+
+  const displayQuantity =
+    cartItems.find((cartItem) => cartItem.coffeeId === item._id)?.qty ?? 0;
 
   const handleAddItem = (id: string) => {
     if (displayQuantity >= item.stock) return;
     if (displayQuantity >= 6) return;
 
-    setDisplayQuantity((prev: number) => prev + 1);
+    updateCartQuantity(id, displayQuantity + 1);
 
     fetcher.submit(null, {
       method: "post",
@@ -28,7 +32,7 @@ const AddRemoveButtons = ({
   const handleRemoveItem = (id: string) => {
     if (displayQuantity <= 1) return;
 
-    setDisplayQuantity((prev: number) => prev - 1);
+    updateCartQuantity(id, displayQuantity - 1);
 
     fetcher.submit(null, {
       method: "post",
@@ -43,13 +47,14 @@ const AddRemoveButtons = ({
   }, [fetcher.state, fetcher.data]);
 
   const atMinimum = displayQuantity <= 1;
+
   const atMaximum = displayQuantity >= item.stock || displayQuantity >= 6;
 
   return (
     <div className="flex items-center rounded-full border border-border bg-surface">
       <button
         onClick={() => handleRemoveItem(item._id)}
-        disabled={atMinimum}
+        disabled={!cartLoaded || atMinimum}
         className={`cursor-pointer px-3 py-2 transition ${
           atMinimum
             ? "cursor-not-allowed text-text-muted"
@@ -65,7 +70,7 @@ const AddRemoveButtons = ({
 
       <button
         onClick={() => handleAddItem(item._id)}
-        disabled={atMaximum}
+        disabled={!cartLoaded || atMaximum}
         className={`cursor-pointer px-3 py-2 transition ${
           atMaximum
             ? "cursor-not-allowed text-text-muted"

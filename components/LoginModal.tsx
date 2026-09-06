@@ -1,7 +1,5 @@
-import { useEffect, useState, useRef } from "react";
-import { X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { authClient } from "../app/lib/auth-client";
-import { ChevronDown } from "lucide-react";
 
 const countries = [
   { name: "India", code: "+91", flag: "🇮🇳" },
@@ -37,8 +35,10 @@ export default function LoginModal({
   const [resendCooldown, setResendCooldown] = useState(0);
   const [countryCode, setCountryCode] = useState("+91");
   const [fullPhoneNumber, setFullPhoneNumber] = useState("");
+
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+  // Resend countdown
   useEffect(() => {
     if (resendCooldown <= 0) return;
 
@@ -72,12 +72,14 @@ export default function LoginModal({
     }
 
     setFullPhoneNumber(fullNumber);
+    setOtp("");
     setOtpSent(true);
+    setResendCooldown(30);
   }
 
   async function verifyOTP() {
-    if (!otp) {
-      setError("Enter the OTP");
+    if (otp.length !== 6) {
+      setError("Enter the complete 6-digit OTP");
       return;
     }
 
@@ -103,19 +105,14 @@ export default function LoginModal({
     }
   }
 
-  function continueAsGuest() {
-    sessionStorage.setItem(`guest-${tableId}`, "true");
-    onClose();
-  }
-
   async function resendOTP() {
-    if (resendCooldown > 0) return;
+    if (resendCooldown > 0 || !fullPhoneNumber) return;
 
     setError("");
     setLoading(true);
 
     const { error } = await authClient.phoneNumber.sendOtp({
-      phoneNumber,
+      phoneNumber: fullPhoneNumber,
     });
 
     setLoading(false);
@@ -126,7 +123,23 @@ export default function LoginModal({
     }
 
     setResendCooldown(30);
+    setOtp("");
     setError("OTP resent successfully");
+
+    otpRefs.current[0]?.focus();
+  }
+
+  function continueAsGuest() {
+    sessionStorage.setItem(`guest-${tableId}`, "true");
+    onClose();
+  }
+
+  function changePhoneNumber() {
+    setOtpSent(false);
+    setOtp("");
+    setError("");
+    setResendCooldown(0);
+    setFullPhoneNumber("");
   }
 
   const hour = new Date().getHours();
@@ -142,11 +155,13 @@ export default function LoginModal({
             Welcome to Kissa Mori
           </h2>
 
-          <h3 className="mt-2 text-lg font-medium text-[#3b261c]">{greeting}</h3>
+          <h3 className="mt-2 text-lg font-medium text-[#3b261c]">
+            {greeting}
+          </h3>
 
           <p className="mt-2 text-sm text-gray-500">
             {otpSent
-              ? `Enter the OTP sent to ${phoneNumber}`
+              ? `Enter the OTP sent to ${fullPhoneNumber}`
               : "Login to continue your order"}
           </p>
         </div>
@@ -214,7 +229,8 @@ export default function LoginModal({
                     if (!value) return;
 
                     const newOtp = otp.split("");
-                    newOtp[index] = value;
+                    newOtp[index] = value[0];
+
                     setOtp(newOtp.join(""));
 
                     if (index < 5) {
@@ -227,6 +243,7 @@ export default function LoginModal({
 
                       const newOtp = otp.split("");
                       newOtp[index] = "";
+
                       setOtp(newOtp.join(""));
 
                       if (index > 0) {
@@ -249,13 +266,21 @@ export default function LoginModal({
                     const nextIndex = Math.min(pasted.length, 5);
                     otpRefs.current[nextIndex]?.focus();
                   }}
-                  className="caret-transparent h-14 w-full rounded-xl border border-gray-300 bg-white text-center text-xl font-medium outline-none focus:border-[#3b261c] focus:ring-1 focus:ring-[#3b261c] sm:h-14 sm:text-xl"
+                  className="h-14 w-full caret-transparent rounded-xl border border-gray-300 bg-white text-center text-xl font-medium outline-none focus:border-[#3b261c] focus:ring-1 focus:ring-[#3b261c] sm:h-14 sm:text-xl"
                 />
               ))}
             </div>
 
             {error && (
-              <p className="mb-4 text-center text-sm text-red-500">{error}</p>
+              <p
+                className={`mb-4 text-center text-sm ${
+                  error === "OTP resent successfully"
+                    ? "text-green-600"
+                    : "text-red-500"
+                }`}
+              >
+                {error}
+              </p>
             )}
 
             <button
@@ -277,11 +302,7 @@ export default function LoginModal({
             </button>
 
             <button
-              onClick={() => {
-                setOtpSent(false);
-                setOtp("");
-                setError("");
-              }}
+              onClick={changePhoneNumber}
               className="mt-3 w-full text-sm text-gray-500 hover:text-gray-800"
             >
               Change phone number
@@ -293,7 +314,9 @@ export default function LoginModal({
           <>
             <div className="my-6 flex items-center gap-3">
               <div className="h-px flex-1 bg-gray-200" />
+
               <span className="text-xs text-gray-400">OR</span>
+
               <div className="h-px flex-1 bg-gray-200" />
             </div>
 

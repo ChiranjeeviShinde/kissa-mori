@@ -15,9 +15,7 @@ type CartProps = {
 
 export default function Cart({ open, setOpen, images }: CartProps) {
   const { id: tableId } = useParams();
-  const { coffees } = useCoffee();
-
-  const [deletedItems, setDeletedItems] = useState<string[]>([]);
+  const { coffees, cartItems } = useCoffee();
 
   const cartFetcher = useFetcher();
 
@@ -29,30 +27,10 @@ export default function Cart({ open, setOpen, images }: CartProps) {
     }
   }, [tableId]);
 
-  const cartItems = cartFetcher.data?.items ?? [];
-
-  const visibleCartItems = cartItems.filter(
-    (item: any) => !deletedItems.includes(item.coffeeId),
-  );
-
-  const total = visibleCartItems.reduce(
+  const total = cartItems.reduce(
     (sum: number, item: any) => sum + item.price * item.qty,
     0,
   );
-
-  useEffect(() => {
-    if (!tableId) return;
-
-    const updateCart = () => {
-      cartFetcher.load(`/api/table/${tableId}/cart`);
-    };
-
-    window.addEventListener("cart-updated", updateCart);
-
-    return () => {
-      window.removeEventListener("cart-updated", updateCart);
-    };
-  }, [tableId]);
 
   const [mounted, setMounted] = useState(false);
 
@@ -88,64 +66,59 @@ export default function Cart({ open, setOpen, images }: CartProps) {
         </div>
 
         <div className="flex-1 space-y-4 overflow-y-auto p-5">
-          {visibleCartItems.length === 0 && (
+          {cartItems.length === 0 && (
             <p className="pt-10 text-center text-sm text-text-muted">
               Your cart is empty.
             </p>
           )}
 
-          {visibleCartItems
-            .filter((item: any) => !deletedItems.includes(item.coffeeId))
-            .map((item: any) => {
-              const imageIndex = coffees.findIndex(
-                (coffee) => coffee._id === item.coffeeId,
-              );
-              return (
-                <div
-                  key={item.coffeeId}
-                  className="flex gap-4 rounded-2xl border border-border bg-surface p-4"
-                >
-                  <img
-                    src={images[imageIndex % images.length]}
-                    alt={item.name}
-                    className="h-24 w-24 rounded-xl object-cover"
-                  />
+          {cartItems.map((item: any) => {
+            const imageIndex = coffees.findIndex(
+              (coffee) => coffee._id === item.coffeeId,
+            );
+            return (
+              <div
+                key={item.coffeeId}
+                className="flex gap-4 rounded-2xl border border-border bg-surface p-4"
+              >
+                <img
+                  src={images[imageIndex % images.length]}
+                  alt={item.name}
+                  className="h-24 w-24 rounded-xl object-cover"
+                />
 
-                  <div className="flex flex-1 flex-col justify-between">
-                    <div>
-                      <h3 className="font-serif font-medium text-text-primary">
-                        {item.name}
-                      </h3>
+                <div className="flex flex-1 flex-col justify-between">
+                  <div>
+                    <h3 className="font-serif font-medium text-text-primary">
+                      {item.name}
+                    </h3>
 
-                      <p className="mt-1 text-sm text-text-secondary">
-                        ${item.price}
-                      </p>
-                    </div>
+                    <p className="mt-1 text-sm text-text-secondary">
+                      ${item.price}
+                    </p>
+                  </div>
 
-                    <div className="flex items-center justify-between">
-                      <AddRemoveButtons
-                        item={{
-                          ...item,
-                          _id: item.coffeeId,
-                        }}
-                        tableId={tableId!}
-                      />
+                  <div className="flex items-center justify-between">
+                    <AddRemoveButtons
+                      item={{
+                        ...item,
+                        _id: item.coffeeId,
+                      }}
+                      tableId={tableId!}
+                    />
 
-                      <DeleteButton
-                        item={{
-                          ...item,
-                          _id: item.coffeeId,
-                        }}
-                        tableId={tableId!}
-                        onDelete={(coffeeId) => {
-                          setDeletedItems((prev) => [...prev, coffeeId]);
-                        }}
-                      />
-                    </div>
+                    <DeleteButton
+                      item={{
+                        ...item,
+                        _id: item.coffeeId,
+                      }}
+                      tableId={tableId!}
+                    />
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
         </div>
 
         <div className="border-t border-border bg-background p-6">
@@ -166,7 +139,7 @@ export default function Cart({ open, setOpen, images }: CartProps) {
                 navigate(`/table/${tableId}/checkout`);
               }
             }}
-            disabled={visibleCartItems.length === 0}
+            disabled={cartItems.length === 0}
             className="w-full rounded-full bg-espresso py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover cursor-pointer"
           >
             Checkout

@@ -20,7 +20,13 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSearch] = useState("");
 
-  const { coffees } = useCoffee();
+  const { coffees, loadCart } = useCoffee();
+
+  useEffect(() => {
+    if (!tableId) return;
+
+    loadCart(tableId);
+  }, [tableId, loadCart]);
 
   const { data: session, isPending } = authClient.useSession();
 
@@ -85,7 +91,6 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
         <div className="mx-auto max-w-6xl px-4 pt-4 sm:px-6">
           <div className="flex flex-row items-center justify-between">
             <img src="/logo.png" className="w-36 sm:w-44" alt="Wash Coffee" />
-
             <Navbar images={images} />
           </div>
 

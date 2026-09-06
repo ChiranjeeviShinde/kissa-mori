@@ -1,22 +1,15 @@
 import { Trash2 } from "lucide-react";
 import { useFetcher } from "react-router";
+import { useCoffee } from "../app/context/CoffeeContext";
 
-const DeleteButton = ({
-  item,
-  tableId,
-  onDelete,
-}: {
-  item: any;
-  tableId: string;
-  onDelete: (coffeeId: string) => void;
-}) => {
+const DeleteButton = ({ item, tableId }: { item: any; tableId: string }) => {
   const actionFetcher = useFetcher();
+  const { updateCartQuantity } = useCoffee();
 
   const handleDeleteItem = (coffeeId: string) => {
     if (!tableId) return;
 
-    // Remove from UI immediately
-    onDelete(coffeeId);
+    updateCartQuantity(coffeeId, 0);
 
     actionFetcher.submit(null, {
       method: "post",
