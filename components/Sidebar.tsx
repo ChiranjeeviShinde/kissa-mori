@@ -10,13 +10,26 @@ type SidebarProps = {
 
 export default function Sidebar({ open, setOpen }: SidebarProps) {
   const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const [currentTableId, setCurrentTableId] = useState<string | null>(null);
 
   const { id: tableId } = useParams();
 
+  useEffect(() => {
+    setMounted(true);
+
+    if (tableId) {
+      sessionStorage.setItem("currentTableId", tableId);
+      setCurrentTableId(tableId);
+    } else {
+      const savedTableId = sessionStorage.getItem("currentTableId");
+      setCurrentTableId(savedTableId);
+    }
+  }, [tableId]);
+
   const links = [
-    { name: "All Items", href: `/table/${tableId}` },
+    ...(currentTableId
+      ? [{ name: "All Items", href: `/table/${currentTableId}` }]
+      : []),
     { name: "About Us", href: "/about" },
     { name: "Contact Us", href: "/contact" },
   ];
@@ -33,13 +46,14 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
       />
 
       <div
-        className={`fixed top-0 right-0 z-70 flex h-screen w-72 flex-col border-l border-border bg-background transition-all duration-300 ease-out
-        ${open ? "translate-x-0 shadow-2xl" : "translate-x-full"}`}
+        className={`fixed top-0 right-0 z-70 flex h-screen w-72 flex-col border-l border-border bg-background transition-all duration-300 ease-out ${
+          open ? "translate-x-0 shadow-2xl" : "translate-x-full"
+        }`}
       >
         <div className="flex items-center justify-end p-6">
           <button
             onClick={() => setOpen(false)}
-            className="rounded-full p-2 transition-all  active:scale-90 active:rotate-90 duration-200 hover:rotate-90 hover:bg-surface-muted"
+            className="rounded-full p-2 transition-all duration-200 hover:rotate-90 hover:bg-surface-muted active:scale-90 active:rotate-90"
           >
             <X size={24} />
           </button>
@@ -50,7 +64,8 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             <Link
               key={link.name}
               to={link.href}
-              className="px-6 py-6 font-serif text-xl font-medium text-text-primary transition-all duration-300 hover:bg-surface-muted hover:pl-10 active:bg-surface-muted active:scale-[0.98]"
+              onClick={() => setOpen(false)}
+              className="px-6 py-6 font-serif text-xl font-medium text-text-primary transition-all duration-300 hover:bg-surface-muted hover:pl-10 active:scale-[0.98] active:bg-surface-muted"
               style={{
                 transitionDelay: open ? `${index * 70}ms` : "0ms",
                 opacity: open ? 1 : 0,
