@@ -92,13 +92,15 @@ const ItemCard = ({ id, image, tableId }: ItemCardProps) => {
                   e.stopPropagation();
                 }}
               >
-                <AddRemoveButtons
-                  item={{
-                    ...item,
-                    qty: quantity,
-                  }}
-                  tableId={tableId!}
-                />
+                <div className="origin-center ml-0.25 scale-[0.85] sm:scale-100">
+                  <AddRemoveButtons
+                    item={{
+                      ...item,
+                      qty: quantity,
+                    }}
+                    tableId={tableId!}
+                  />
+                </div>
               </div>
             )}
           </span>
