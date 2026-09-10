@@ -2,6 +2,7 @@ import TableCart from "../models/tableCart.server";
 import Coffee from "../models/coffee.server";
 import { connectDB } from "../db.server";
 import { auth } from "../lib/auth.server";
+import { razorpay } from "../utils/razorpay.server";
 
 export async function action({ request, params }: any) {
   try {
@@ -19,16 +20,14 @@ export async function action({ request, params }: any) {
     await connectDB();
 
     const tableId = params.tableId;
-    const userId = session.user.id;
-
-    // console.log("Checkout user:", userId);
-    // console.log("Checkout phone:", session.user.phoneNumber);
 
     const cart = await TableCart.findOne({ tableId });
 
     if (!cart || cart.items.length === 0) {
       return Response.json({ message: "Cart is empty" }, { status: 400 });
     }
+
+    let total = 0;
 
     for (const item of cart.items) {
       const coffee = await Coffee.findById(item.coffeeId);
@@ -41,26 +40,33 @@ export async function action({ request, params }: any) {
           { status: 400 },
         );
       }
+
+      total += item.price * item.qty;
     }
 
-    for (const item of cart.items) {
-      await Coffee.findByIdAndUpdate(item.coffeeId, {
-        $inc: { stock: -item.qty },
-      });
-    }
-
-    cart.items = [];
-
-    await cart.save();
+    const order = await razorpay.orders.create({
+      amount: Math.round(total * 100),
+      currency: "USD",
+      receipt: `table_${tableId}_${Date.now()}`,
+      notes: {
+        tableId,
+        userId: session.user.id,
+      },
+    });
 
     return Response.json({
       success: true,
-      message: "Order placed successfully",
-      userId,
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      keyId: process.env.RAZORPAY_KEY_ID,
     });
   } catch (error) {
     console.error(error);
 
-    return Response.json({ message: "Checkout failed" }, { status: 500 });
+    return Response.json(
+      { message: "Failed to create payment order" },
+      { status: 500 },
+    );
   }
 }

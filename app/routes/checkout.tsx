@@ -1,17 +1,33 @@
 import { useEffect, useState } from "react";
+
 import { useFetcher, useNavigate, useParams } from "react-router";
+
 import { useCoffee } from "../../app/context/CoffeeContext";
+
 import { authClient } from "../../app/lib/auth-client";
+
 import LoginModal from "../../components/LoginModal";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export default function Checkout() {
   const { id: tableId } = useParams();
 
   const checkoutFetcher = useFetcher();
+
+  const verifyFetcher = useFetcher();
+
   const navigate = useNavigate();
 
   const { data: session, isPending } = authClient.useSession();
+
   const [showLogin, setShowLogin] = useState(false);
+
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   const { cartItems, setCartItems, setCartOpen } = useCoffee();
 
@@ -29,12 +45,125 @@ export default function Checkout() {
   }, [session, isPending]);
 
   useEffect(() => {
-    if (checkoutFetcher.data?.success && tableId) {
+    const script = document.createElement("script");
+
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (verifyFetcher.data?.success) {
       setCartItems([]);
       setCartOpen(false);
+      setPaymentLoading(false);
+
       navigate(-1);
     }
-  }, [checkoutFetcher.data, tableId, setCartItems, setCartOpen, navigate]);
+
+    if (verifyFetcher.data && !verifyFetcher.data.success) {
+      setPaymentLoading(false);
+    }
+  }, [verifyFetcher.data, setCartItems, setCartOpen, navigate]);
+
+  useEffect(() => {
+    if (
+      !checkoutFetcher.data?.success ||
+      !checkoutFetcher.data?.orderId ||
+      !tableId
+    ) {
+      return;
+    }
+
+    if (!window.Razorpay) {
+      setPaymentLoading(false);
+      return;
+    }
+
+    const options = {
+      key: checkoutFetcher.data.keyId,
+
+      amount: checkoutFetcher.data.amount,
+
+      currency: checkoutFetcher.data.currency,
+
+      name: "Kissa Mori",
+
+      description: "Coffee Order",
+
+      order_id: checkoutFetcher.data.orderId,
+
+      handler: (response: any) => {
+        verifyFetcher.submit(
+          {
+            tableId,
+
+            razorpay_payment_id: response.razorpay_payment_id,
+
+            razorpay_order_id: response.razorpay_order_id,
+
+            razorpay_signature: response.razorpay_signature,
+          },
+          {
+            method: "post",
+
+            action: "/api/payment/verify",
+
+            encType: "application/json",
+          },
+        );
+      },
+
+      modal: {
+        ondismiss: () => {
+          setPaymentLoading(false);
+        },
+      },
+
+      prefill: {
+        name: session?.user?.name ?? "",
+        email: session?.user?.email ?? "",
+      },
+
+      theme: {
+        color: "#3b2417",
+      },
+    };
+
+    const razorpay = new window.Razorpay(options);
+
+    razorpay.on("payment.failed", () => {
+      setPaymentLoading(false);
+    });
+
+    razorpay.open();
+  }, [checkoutFetcher.data, tableId, session]);
+
+  const handlePayment = () => {
+    if (!tableId || !session || cartItems.length === 0) {
+      return;
+    }
+
+    setPaymentLoading(true);
+
+    checkoutFetcher.submit(null, {
+      method: "post",
+
+      action: `/api/table/${tableId}/checkout`,
+    });
+  };
+
+  useEffect(() => {
+    if (checkoutFetcher.data && !checkoutFetcher.data.success) {
+      setPaymentLoading(false);
+    }
+  }, [checkoutFetcher.data]);
 
   return (
     <>
@@ -75,7 +204,7 @@ export default function Checkout() {
                     </div>
 
                     <p className="font-medium text-text-primary">
-                      ${item.price * item.qty}
+                      ${(item.price * item.qty).toFixed(2)}
                     </p>
                   </div>
                 ))}
@@ -84,7 +213,8 @@ export default function Checkout() {
               <div className="mt-8 rounded-2xl border border-border bg-surface p-6">
                 <div className="flex justify-between text-lg">
                   <span>Total</span>
-                  <span>${total}</span>
+
+                  <span>${total.toFixed(2)}</span>
                 </div>
 
                 {checkoutFetcher.data?.message &&
@@ -94,28 +224,26 @@ export default function Checkout() {
                     </p>
                   )}
 
-                {checkoutFetcher.data?.success ? (
-                  <div className="mt-6 rounded-xl bg-green-50 p-4 text-center text-green-700">
-                    Order placed successfully!
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      if (!tableId) return;
+                {verifyFetcher.data?.message &&
+                  !verifyFetcher.data?.success && (
+                    <p className="mt-4 text-center text-red-500">
+                      {verifyFetcher.data.message}
+                    </p>
+                  )}
 
-                      checkoutFetcher.submit(null, {
-                        method: "post",
-                        action: `/api/table/${tableId}/checkout`,
-                      });
-                    }}
-                    disabled={checkoutFetcher.state !== "idle"}
-                    className="mt-6 w-full rounded-full bg-espresso py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover disabled:opacity-50"
-                  >
-                    {checkoutFetcher.state === "submitting"
-                      ? "Placing Order..."
-                      : "Place Order"}
-                  </button>
-                )}
+                <button
+                  onClick={handlePayment}
+                  disabled={
+                    paymentLoading ||
+                    checkoutFetcher.state !== "idle" ||
+                    verifyFetcher.state !== "idle"
+                  }
+                  className="mt-6 w-full cursor-pointer rounded-full bg-espresso py-3 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {paymentLoading
+                    ? "Processing Payment..."
+                    : `Pay $${total.toFixed(2)}`}
+                </button>
               </div>
             </>
           )}
