@@ -9,13 +9,41 @@ const s3Client = new S3Client({
   },
 });
 
+const imageCache = new Map<
+  string,
+  {
+    url: string;
+    expiresAt: number;
+  }
+>();
+
+const SIGNED_URL_TTL = 60 * 60;
+
 async function getImage(key: string) {
+  const now = Date.now();
+
+  const cached = imageCache.get(key);
+
+  if (cached && cached.expiresAt > now) {
+    return cached.url;
+  }
+
   const command = new GetObjectCommand({
     Bucket: "kissa-mori",
     Key: key,
+    ResponseCacheControl: "public, max-age=3600",
   });
 
-  return await getSignedUrl(s3Client, command);
+  const url = await getSignedUrl(s3Client, command, {
+    expiresIn: SIGNED_URL_TTL,
+  });
+
+  imageCache.set(key, {
+    url,
+    expiresAt: now + SIGNED_URL_TTL * 1000 - 60_000,
+  });
+
+  return url;
 }
 
 export async function getCoffeeImages() {
@@ -27,5 +55,5 @@ export async function getCoffeeImages() {
     "coffees/c5.jpeg",
   ];
 
-  return await Promise.all(imageKeys.map((key) => getImage(key)));
+  return Promise.all(imageKeys.map(getImage));
 }

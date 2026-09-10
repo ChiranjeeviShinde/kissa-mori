@@ -64,13 +64,13 @@ export default function Checkout() {
       setCartOpen(false);
       setPaymentLoading(false);
 
-      navigate(-1);
+      navigate(`/table/${tableId}`);
     }
 
     if (verifyFetcher.data && !verifyFetcher.data.success) {
       setPaymentLoading(false);
     }
-  }, [verifyFetcher.data, setCartItems, setCartOpen, navigate]);
+  }, [verifyFetcher.data, tableId, setCartItems, setCartOpen, navigate]);
 
   useEffect(() => {
     if (
