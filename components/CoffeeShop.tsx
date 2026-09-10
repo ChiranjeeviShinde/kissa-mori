@@ -10,6 +10,7 @@ import Footer from "./Footer";
 
 import { useCoffee } from "../app/context/CoffeeContext";
 import { authClient } from "../app/lib/auth-client";
+import Logo from "./Logo";
 
 type CoffeeShopProps = {
   images: string[];
@@ -86,11 +87,11 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
     tableId && sessionStorage.getItem(`guest-${tableId}`) === "true";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
       <div className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="mx-auto max-w-6xl px-4 pt-4 sm:px-6">
           <div className="flex flex-row items-center justify-between">
-            <img src="/logo.png" className="w-36 sm:w-44" alt="Wash Coffee" />
+            <Logo />
             <Navbar images={images} />
           </div>
 
@@ -98,9 +99,9 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
             {session?.user ? (
               <>
                 <span className="text-sm text-text-secondary">
-                  Signed in as{" "}
+                  Welcome,{" "}
                   <span className="font-medium text-text-primary">
-                    {session.user.phoneNumber}
+                    {session.user.name}
                   </span>
                 </span>
 
@@ -117,6 +118,7 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
               <span className="text-sm text-text-secondary">Guest</span>
             ) : null}
           </div>
+
           <div className="pb-4 pt-3">
             <SearchBar
               value={search}

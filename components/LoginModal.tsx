@@ -28,17 +28,21 @@ export default function LoginModal({
   onLoginSuccess,
 }: LoginModalProps) {
   const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
+  const [name, setName] = useState("");
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
+
   const [countryCode, setCountryCode] = useState("+91");
   const [fullPhoneNumber, setFullPhoneNumber] = useState("");
 
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  // Resend countdown
   useEffect(() => {
     if (resendCooldown <= 0) return;
 
@@ -98,6 +102,30 @@ export default function LoginModal({
       return;
     }
 
+    setOtpVerified(true);
+    setError("");
+  }
+
+  async function saveName() {
+    if (!name.trim()) {
+      setError("Enter your name");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    const { error } = await authClient.updateUser({
+      name: name.trim(),
+    });
+
+    setLoading(false);
+
+    if (error) {
+      setError(error.message || "Failed to save your name");
+      return;
+    }
+
     onClose();
 
     if (onLoginSuccess) {
@@ -136,10 +164,12 @@ export default function LoginModal({
 
   function changePhoneNumber() {
     setOtpSent(false);
+    setOtpVerified(false);
     setOtp("");
     setError("");
     setResendCooldown(0);
     setFullPhoneNumber("");
+    setName("");
   }
 
   const hour = new Date().getHours();
@@ -160,9 +190,11 @@ export default function LoginModal({
           </h3>
 
           <p className="mt-2 text-sm text-gray-500">
-            {otpSent
-              ? `Enter the OTP sent to ${fullPhoneNumber}`
-              : "Login to continue your order"}
+            {!otpSent
+              ? "Login to continue your order"
+              : !otpVerified
+                ? `Enter the OTP sent to ${fullPhoneNumber}`
+                : "Tell us your name"}
           </p>
         </div>
 
@@ -209,7 +241,7 @@ export default function LoginModal({
               {loading ? "Sending..." : "Continue with OTP"}
             </button>
           </>
-        ) : (
+        ) : !otpVerified ? (
           <>
             <div className="mb-4 grid w-full grid-cols-6 gap-2 sm:gap-3">
               {Array.from({ length: 6 }).map((_, index) => (
@@ -266,7 +298,7 @@ export default function LoginModal({
                     const nextIndex = Math.min(pasted.length, 5);
                     otpRefs.current[nextIndex]?.focus();
                   }}
-                  className="h-14 w-full caret-transparent rounded-xl border border-gray-300 bg-white text-center text-xl font-medium outline-none focus:border-[#3b261c] focus:ring-1 focus:ring-[#3b261c] sm:h-14 sm:text-xl"
+                  className="h-14 w-full caret-transparent rounded-xl border border-gray-300 bg-white text-center text-xl font-medium outline-none focus:border-[#3b261c] focus:ring-1 focus:ring-[#3b261c]"
                 />
               ))}
             </div>
@@ -308,15 +340,43 @@ export default function LoginModal({
               Change phone number
             </button>
           </>
+        ) : (
+          <>
+            <label className="mb-2 block text-sm font-medium text-gray-700">
+              Your name
+            </label>
+
+            <input
+              type="text"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  saveName();
+                }
+              }}
+              autoFocus
+              className="mb-4 w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-[#3b261c]"
+            />
+
+            {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+
+            <button
+              onClick={saveName}
+              disabled={loading}
+              className="w-full rounded-xl bg-[#302019] py-3 text-sm font-medium tracking-wide text-white disabled:opacity-50"
+            >
+              {loading ? "Saving..." : "Continue"}
+            </button>
+          </>
         )}
 
-        {showGuest && (
+        {showGuest && !otpVerified && (
           <>
             <div className="my-6 flex items-center gap-3">
               <div className="h-px flex-1 bg-gray-200" />
-
               <span className="text-xs text-gray-400">OR</span>
-
               <div className="h-px flex-1 bg-gray-200" />
             </div>
 

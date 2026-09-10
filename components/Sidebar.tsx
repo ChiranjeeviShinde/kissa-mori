@@ -28,7 +28,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
 
   const links = [
     ...(currentTableId
-      ? [{ name: "All Items", href: `/table/${currentTableId}` }]
+      ? [{ name: "Café", href: `/table/${currentTableId}` }]
       : []),
     { name: "About Us", href: "/about" },
     { name: "Contact Us", href: "/contact" },

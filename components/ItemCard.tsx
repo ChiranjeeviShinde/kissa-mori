@@ -92,7 +92,7 @@ const ItemCard = ({ id, image, tableId }: ItemCardProps) => {
                   e.stopPropagation();
                 }}
               >
-                <div className="origin-center ml-0.25 scale-[0.85] sm:scale-100">
+                <div className="origin-center ml-px scale-[0.85] sm:scale-100">
                   <AddRemoveButtons
                     item={{
                       ...item,

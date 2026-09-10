@@ -1,6 +1,7 @@
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import Sidebar from "../../components/Sidebar";
+import Logo from "../../components/Logo";
 
 export default function Privacy() {
   const [open, setOpen] = useState(false);
@@ -10,7 +11,7 @@ export default function Privacy() {
       <div className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="mx-auto max-w-6xl px-4 pt-4 sm:px-6">
           <div className="flex flex-row items-center justify-between">
-            <img src="/logo.png" className="w-36 sm:w-44" alt="Kissa Mori" />
+            <Logo />
 
             <button
               onClick={() => setOpen(!open)}
