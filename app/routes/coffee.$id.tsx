@@ -5,9 +5,10 @@ import { useParams, useSearchParams, useLoaderData } from "react-router";
 
 import { useCoffee } from "../context/CoffeeContext";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Delete } from "lucide-react";
 import AddRemoveButtons from "../../components/AddRemoveButtons";
 import { getImageFromRequest } from "../utils/image.server";
+import DeleteButton from "../../components/DeleteButton";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const image = await getImageFromRequest(request, getCoffeeImages);
@@ -106,7 +107,10 @@ export default function CoffeePage() {
                     {coffee.stock === 0 ? "Out of Stock" : "Add to Cart"}
                   </button>
                 ) : (
-                  <AddRemoveButtons item={coffee} tableId={tableId!} />
+                  <div className="flex items-center gap-2">
+                    <AddRemoveButtons item={coffee} tableId={tableId!} />
+                    <DeleteButton item={coffee} tableId={tableId!} />
+                  </div>
                 )}
               </div>
             </div>

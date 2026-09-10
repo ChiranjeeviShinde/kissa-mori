@@ -7,7 +7,7 @@ const DeleteButton = ({ item, tableId }: { item: any; tableId: string }) => {
   const { updateCartQuantity } = useCoffee();
 
   const handleDeleteItem = (coffeeId: string) => {
-    if (!tableId) return;
+    if (!tableId || !coffeeId) return;
 
     updateCartQuantity(coffeeId, 0);
 
@@ -19,8 +19,10 @@ const DeleteButton = ({ item, tableId }: { item: any; tableId: string }) => {
 
   return (
     <button
-      onClick={() => handleDeleteItem(item.coffeeId)}
-      className="cursor-pointer rounded-full p-2 text-red-500 transition hover:bg-red-50"
+      type="button"
+      onClick={() => handleDeleteItem(item._id)}
+      disabled={actionFetcher.state !== "idle"}
+      className="cursor-pointer rounded-full p-2 text-red-500 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <Trash2 size={18} />
     </button>
