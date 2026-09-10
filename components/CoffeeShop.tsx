@@ -94,21 +94,28 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
             <Navbar images={images} />
           </div>
 
-          <div className="flex col gap-2">
+          <div className="flex items-center gap-3">
             {session?.user ? (
-              <span>Signed in as {session.user.phoneNumber}</span>
-            ) : isGuest ? (
-              <span>Guest</span>
-            ) : null}
+              <>
+                <span className="text-sm text-text-secondary">
+                  Signed in as{" "}
+                  <span className="font-medium text-text-primary">
+                    {session.user.phoneNumber}
+                  </span>
+                </span>
 
-            {session?.user && (
-              <button
-                onClick={() => authClient.signOut()}
-                className="text-sm text-text-secondary hover:text-text-primary"
-              >
-                Sign out
-              </button>
-            )}
+                <span className="h-5 w-px bg-border" />
+
+                <button
+                  onClick={() => authClient.signOut()}
+                  className="text-sm text-text-secondary transition-colors hover:text-text-primary"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : isGuest ? (
+              <span className="text-sm text-text-secondary">Guest</span>
+            ) : null}
           </div>
           <div className="pb-4 pt-3">
             <SearchBar

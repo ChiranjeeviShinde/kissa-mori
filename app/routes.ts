@@ -27,4 +27,7 @@ export default [
     "./routes/api.table.$tableId.checkout.ts",
   ),
   route("about", "./routes/about.tsx"),
+  route("contact", "./routes/contact.tsx"),
+  route("terms", "./routes/terms.tsx"),
+  route("privacy", "./routes/privacy.tsx"),
 ] satisfies RouteConfig;
