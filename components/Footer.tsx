@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
     <footer className="mt-auto border-t border-[#e5ded8] px-6 py-6 text-sm text-[#6b5b50]">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 sm:flex-row">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 sm:flex-row">
         <p>© 2026 Kissa Mori. All Rights Reserved.</p>
 
         <div className="flex gap-5">

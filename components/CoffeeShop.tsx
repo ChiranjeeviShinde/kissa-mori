@@ -11,6 +11,7 @@ import Footer from "./Footer";
 import { useCoffee } from "../app/context/CoffeeContext";
 import { authClient } from "../app/lib/auth-client";
 import Logo from "./Logo";
+import { getStableImageAssignments } from "../app/utils/imageIndex";
 
 type CoffeeShopProps = {
   images: string[];
@@ -86,6 +87,11 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
   const isGuest =
     tableId && sessionStorage.getItem(`guest-${tableId}`) === "true";
 
+  const imageAssignments = useMemo(
+    () => getStableImageAssignments(coffees, images.length),
+    [coffees, images.length],
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <div className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
@@ -152,9 +158,11 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
 
         <div className="grid grid-cols-2 gap-4 scrollbar-hide sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {filteredItems.map((coffee) => {
-            const imageIndex = coffees.findIndex(
+            const coffeeIndex = coffees.findIndex(
               (item) => item._id === coffee._id,
             );
+
+            const imageIndex = imageAssignments[coffeeIndex];
 
             return (
               <Link
@@ -167,7 +175,7 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
               >
                 <ItemCard
                   id={coffee._id}
-                  image={images[imageIndex % images.length]}
+                  image={images[imageIndex]}
                   tableId={tableId}
                 />
               </Link>
