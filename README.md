@@ -310,3 +310,15 @@ The QR code connects the customer's digital session directly to their physical t
 GitHub: [ChiranjeeviShinde](https://github.com/ChiranjeeviShinde)
 
 ---
+
+https://github.com/user-attachments/assets/91a633af-6fd9-4b88-b9ca-18c8e8929f21
+
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/107abcd3-3fc6-4622-8405-e4856cbe5882" />
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/60e93e3e-9e5d-4319-98d7-c71accca6781" />
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/2f65940b-d015-427b-aea1-e161ca1038f5" />
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/3a477182-6ad2-4c86-91cb-31dcfdc46b6c" />
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/b4a05e92-b838-4cd2-9350-2713e96a87cc" />
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/529d406c-735e-4990-88af-377684c7b1e3" />
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/4d4ea475-8e3e-4488-93bd-1a2dcfc412f1" />
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/4ac95b49-5f28-434d-9d5c-2fcffbe57e7c" />
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/9e044562-9758-45e2-8041-d094466c0336" />
