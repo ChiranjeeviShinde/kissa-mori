@@ -15,11 +15,11 @@ The important part is that **each table has its own cart/session**.
 For example:
 
 ```text
-Table 1 QR → /menu?table=1 → Table 1 session + cart
+Table 1 QR → /menu?table=UUID A → Table 1 session + cart
 
-Table 2 QR → /menu?table=2 → Table 2 session + cart
+Table 2 QR → /menu?table=UUID B → Table 2 session + cart
 
-Table 3 QR → /menu?table=3 → Table 3 session + cart
+Table 3 QR → /menu?table=UUID C → Table 3 session + cart
 ```
 
 This allows multiple tables to use the same application simultaneously without mixing their carts or orders.
