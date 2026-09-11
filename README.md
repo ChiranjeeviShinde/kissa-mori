@@ -323,4 +323,3 @@ https://github.com/user-attachments/assets/36e32498-b4b8-426b-b7bc-bd1b1b682bc2
 <img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/529d406c-735e-4990-88af-377684c7b1e3" />
 <img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/4d4ea475-8e3e-4488-93bd-1a2dcfc412f1" />
 <img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/4ac95b49-5f28-434d-9d5c-2fcffbe57e7c" />
-<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/9e044562-9758-45e2-8041-d094466c0336" />
