@@ -93,16 +93,14 @@ export default function Checkout() {
 
     const options = {
       key: checkoutFetcher.data.keyId,
-
       amount: checkoutFetcher.data.amount,
-
       currency: checkoutFetcher.data.currency,
-
-      name: "Kissa Mori",
-
-      description: "Coffee Order",
-
       order_id: checkoutFetcher.data.orderId,
+
+      prefill: {
+        contact: session?.user?.phoneNumber || "",
+        email: session?.user?.email || "",
+      },
 
       handler: (response: any) => {
         verifyFetcher.submit(
@@ -129,11 +127,6 @@ export default function Checkout() {
         ondismiss: () => {
           setPaymentLoading(false);
         },
-      },
-
-      prefill: {
-        name: session?.user?.name ?? "",
-        email: session?.user?.email ?? "",
       },
 
       theme: {
