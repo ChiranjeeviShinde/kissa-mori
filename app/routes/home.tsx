@@ -12,7 +12,7 @@ export default function Home() {
           />
 
           <Link
-            to="/"
+            to="/menu"
             className="rounded-full border border-border bg-surface px-5 py-2.5 text-sm font-medium text-text-secondary transition hover:border-espresso/40 hover:text-text-primary"
           >
             Our Menu
@@ -41,7 +41,7 @@ export default function Home() {
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
-                  to="/"
+                  to="/menu"
                   className="rounded-full bg-espresso px-7 py-3.5 text-sm font-medium uppercase tracking-wider text-white transition hover:bg-accent-hover"
                 >
                   Explore Menu
@@ -57,11 +57,11 @@ export default function Home() {
             </div>
 
             <div className="relative">
-              <div className="overflow-hidden rounded-[2rem] border border-border bg-surface">
+              <div className="overflow-hidden rounded-4xl border border-border bg-surface">
                 <img
                   src="/coffee-hero.jpeg"
                   alt="Freshly brewed coffee"
-                  className="h-[420px] w-full object-cover md:h-[520px]"
+                  className="h-105 w-full object-cover md:h-130"
                 />
               </div>
 
@@ -124,7 +124,7 @@ export default function Home() {
 
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <span>© {new Date().getFullYear()} Kissa Mori</span>
+          <span>© 2026 Kissa Mori. All Rights Reserved.</span>
 
           <span>Good coffee. Good moments.</span>
         </div>

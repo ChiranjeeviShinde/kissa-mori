@@ -31,6 +31,8 @@ export default function Checkout() {
 
   const { cartItems, setCartItems, setCartOpen } = useCoffee();
 
+  const [showSuccess, setShowSuccess] = useState(false);
+
   const total = cartItems.reduce(
     (sum: number, item: any) => sum + item.price * item.qty,
     0,
@@ -63,8 +65,11 @@ export default function Checkout() {
       setCartItems([]);
       setCartOpen(false);
       setPaymentLoading(false);
+      setShowSuccess(true);
 
-      navigate(`/table/${tableId}`);
+      setTimeout(() => {
+        navigate(`/table/${tableId}`);
+      }, 3000);
     }
 
     if (verifyFetcher.data && !verifyFetcher.data.success) {
@@ -167,6 +172,27 @@ export default function Checkout() {
 
   return (
     <>
+      {showSuccess && (
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="w-[90%] max-w-sm rounded-2xl bg-background p-8 text-center shadow-2xl">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+              <span className="text-3xl text-green-600">✓</span>
+            </div>
+
+            <h2 className="font-serif text-2xl font-semibold text-text-primary">
+              Order Placed!
+            </h2>
+
+            <p className="mt-2 text-sm text-text-secondary">
+              Your payment was successful.
+            </p>
+
+            <p className="mt-4 text-xs text-text-secondary">
+              Taking you back to the table...
+            </p>
+          </div>
+        </div>
+      )}
       <div className="min-h-screen bg-background px-6 py-10">
         <div className="mx-auto max-w-3xl">
           <button
