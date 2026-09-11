@@ -1,0 +1,423 @@
+{
+  "buildManifest": {
+    "serverBundles": {
+      "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0": {
+        "id": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+        "file": "build/server/nodejs_eyJydW50aW1lIjoibm9kZWpzIn0/index.js",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    },
+    "routeIdToServerBundleId": {
+      "routes/home": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/loading": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/coffee.$id": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/table.$id": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/api.auth": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/api.tables": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/api.table.$tableId.cart.$coffeeId": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/api.table.$tableId.cart": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/api.table.$tableId.cart.$coffeeId.remove": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/api.table.$tableId.cart.$coffeeId.delete": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/checkout": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/api.table.$tableId.checkout": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/about": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/contact": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/terms": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/privacy": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/api.payment.verify": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/menu": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+    },
+    "routes": {
+      "root": {
+        "id": "root",
+        "file": "app/root.tsx",
+        "path": "",
+        "config": {}
+      },
+      "routes/home": {
+        "id": "routes/home",
+        "parentId": "root",
+        "file": "app/routes/home.tsx",
+        "index": true,
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/loading": {
+        "id": "routes/loading",
+        "parentId": "root",
+        "file": "app/routes/loading.tsx",
+        "path": "loading",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/coffee.$id": {
+        "id": "routes/coffee.$id",
+        "parentId": "root",
+        "file": "app/routes/coffee.$id.tsx",
+        "path": "coffee/:id",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/table.$id": {
+        "id": "routes/table.$id",
+        "parentId": "root",
+        "file": "app/routes/table.$id.tsx",
+        "path": "table/:id",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/api.auth": {
+        "id": "routes/api.auth",
+        "parentId": "root",
+        "file": "app/routes/api.auth.ts",
+        "path": "api/auth/*",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/api.tables": {
+        "id": "routes/api.tables",
+        "parentId": "root",
+        "file": "app/routes/api.tables.ts",
+        "path": "api/tables",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/api.table.$tableId.cart.$coffeeId": {
+        "id": "routes/api.table.$tableId.cart.$coffeeId",
+        "parentId": "root",
+        "file": "app/routes/api.table.$tableId.cart.$coffeeId.ts",
+        "path": "api/table/:tableId/cart/:coffeeId",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/api.table.$tableId.cart": {
+        "id": "routes/api.table.$tableId.cart",
+        "parentId": "root",
+        "file": "app/routes/api.table.$tableId.cart.ts",
+        "path": "api/table/:tableId/cart",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/api.table.$tableId.cart.$coffeeId.remove": {
+        "id": "routes/api.table.$tableId.cart.$coffeeId.remove",
+        "parentId": "root",
+        "file": "app/routes/api.table.$tableId.cart.$coffeeId.remove.ts",
+        "path": "api/table/:tableId/cart/:coffeeId/remove",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/api.table.$tableId.cart.$coffeeId.delete": {
+        "id": "routes/api.table.$tableId.cart.$coffeeId.delete",
+        "parentId": "root",
+        "file": "app/routes/api.table.$tableId.cart.$coffeeId.delete.ts",
+        "path": "api/table/:tableId/cart/:coffeeId/delete",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/checkout": {
+        "id": "routes/checkout",
+        "parentId": "root",
+        "file": "app/routes/checkout.tsx",
+        "path": "table/:id/checkout",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/api.table.$tableId.checkout": {
+        "id": "routes/api.table.$tableId.checkout",
+        "parentId": "root",
+        "file": "app/routes/api.table.$tableId.checkout.ts",
+        "path": "api/table/:tableId/checkout",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/about": {
+        "id": "routes/about",
+        "parentId": "root",
+        "file": "app/routes/about.tsx",
+        "path": "about",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/contact": {
+        "id": "routes/contact",
+        "parentId": "root",
+        "file": "app/routes/contact.tsx",
+        "path": "contact",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/terms": {
+        "id": "routes/terms",
+        "parentId": "root",
+        "file": "app/routes/terms.tsx",
+        "path": "terms",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/privacy": {
+        "id": "routes/privacy",
+        "parentId": "root",
+        "file": "app/routes/privacy.tsx",
+        "path": "privacy",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/api.payment.verify": {
+        "id": "routes/api.payment.verify",
+        "parentId": "root",
+        "file": "app/routes/api.payment.verify.ts",
+        "path": "api/payment/verify",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/menu": {
+        "id": "routes/menu",
+        "parentId": "root",
+        "file": "app/routes/menu.tsx",
+        "path": "menu",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    }
+  },
+  "reactRouterConfig": {
+    "appDirectory": "/Users/chiranjeevishinde/Projects/kissa-mori/app",
+    "basename": "/",
+    "buildDirectory": "/Users/chiranjeevishinde/Projects/kissa-mori/build",
+    "future": {
+      "unstable_enableNodeReadableStream": false,
+      "unstable_optimizeDeps": false
+    },
+    "routes": {
+      "root": {
+        "id": "root",
+        "file": "root.tsx",
+        "path": ""
+      },
+      "routes/home": {
+        "id": "routes/home",
+        "parentId": "root",
+        "file": "./routes/home.tsx",
+        "index": true
+      },
+      "routes/loading": {
+        "id": "routes/loading",
+        "parentId": "root",
+        "file": "./routes/loading.tsx",
+        "path": "loading"
+      },
+      "routes/coffee.$id": {
+        "id": "routes/coffee.$id",
+        "parentId": "root",
+        "file": "./routes/coffee.$id.tsx",
+        "path": "coffee/:id"
+      },
+      "routes/table.$id": {
+        "id": "routes/table.$id",
+        "parentId": "root",
+        "file": "./routes/table.$id.tsx",
+        "path": "table/:id"
+      },
+      "routes/api.auth": {
+        "id": "routes/api.auth",
+        "parentId": "root",
+        "file": "./routes/api.auth.ts",
+        "path": "api/auth/*"
+      },
+      "routes/api.tables": {
+        "id": "routes/api.tables",
+        "parentId": "root",
+        "file": "./routes/api.tables.ts",
+        "path": "api/tables"
+      },
+      "routes/api.table.$tableId.cart.$coffeeId": {
+        "id": "routes/api.table.$tableId.cart.$coffeeId",
+        "parentId": "root",
+        "file": "./routes/api.table.$tableId.cart.$coffeeId.ts",
+        "path": "api/table/:tableId/cart/:coffeeId"
+      },
+      "routes/api.table.$tableId.cart": {
+        "id": "routes/api.table.$tableId.cart",
+        "parentId": "root",
+        "file": "./routes/api.table.$tableId.cart.ts",
+        "path": "api/table/:tableId/cart"
+      },
+      "routes/api.table.$tableId.cart.$coffeeId.remove": {
+        "id": "routes/api.table.$tableId.cart.$coffeeId.remove",
+        "parentId": "root",
+        "file": "./routes/api.table.$tableId.cart.$coffeeId.remove.ts",
+        "path": "api/table/:tableId/cart/:coffeeId/remove"
+      },
+      "routes/api.table.$tableId.cart.$coffeeId.delete": {
+        "id": "routes/api.table.$tableId.cart.$coffeeId.delete",
+        "parentId": "root",
+        "file": "./routes/api.table.$tableId.cart.$coffeeId.delete.ts",
+        "path": "api/table/:tableId/cart/:coffeeId/delete"
+      },
+      "routes/checkout": {
+        "id": "routes/checkout",
+        "parentId": "root",
+        "file": "./routes/checkout.tsx",
+        "path": "table/:id/checkout"
+      },
+      "routes/api.table.$tableId.checkout": {
+        "id": "routes/api.table.$tableId.checkout",
+        "parentId": "root",
+        "file": "./routes/api.table.$tableId.checkout.ts",
+        "path": "api/table/:tableId/checkout"
+      },
+      "routes/about": {
+        "id": "routes/about",
+        "parentId": "root",
+        "file": "./routes/about.tsx",
+        "path": "about"
+      },
+      "routes/contact": {
+        "id": "routes/contact",
+        "parentId": "root",
+        "file": "./routes/contact.tsx",
+        "path": "contact"
+      },
+      "routes/terms": {
+        "id": "routes/terms",
+        "parentId": "root",
+        "file": "./routes/terms.tsx",
+        "path": "terms"
+      },
+      "routes/privacy": {
+        "id": "routes/privacy",
+        "parentId": "root",
+        "file": "./routes/privacy.tsx",
+        "path": "privacy"
+      },
+      "routes/api.payment.verify": {
+        "id": "routes/api.payment.verify",
+        "parentId": "root",
+        "file": "routes/api.payment.verify.ts",
+        "path": "api/payment/verify"
+      },
+      "routes/menu": {
+        "id": "routes/menu",
+        "parentId": "root",
+        "file": "./routes/menu.tsx",
+        "path": "menu"
+      }
+    },
+    "routeDiscovery": {
+      "mode": "lazy",
+      "manifestPath": "/__manifest"
+    },
+    "serverBuildFile": "index.js",
+    "serverModuleFormat": "esm",
+    "ssr": true,
+    "splitRouteModules": true,
+    "subResourceIntegrity": false,
+    "allowedActionOrigins": false,
+    "unstable_routeConfig": [
+      {
+        "id": "root",
+        "path": "",
+        "file": "root.tsx",
+        "children": [
+          {
+            "file": "./routes/home.tsx",
+            "index": true
+          },
+          {
+            "file": "./routes/loading.tsx",
+            "path": "loading"
+          },
+          {
+            "file": "./routes/coffee.$id.tsx",
+            "path": "coffee/:id"
+          },
+          {
+            "file": "./routes/table.$id.tsx",
+            "path": "table/:id"
+          },
+          {
+            "file": "./routes/api.auth.ts",
+            "path": "api/auth/*"
+          },
+          {
+            "file": "./routes/api.tables.ts",
+            "path": "api/tables"
+          },
+          {
+            "file": "./routes/api.table.$tableId.cart.$coffeeId.ts",
+            "path": "api/table/:tableId/cart/:coffeeId"
+          },
+          {
+            "file": "./routes/api.table.$tableId.cart.ts",
+            "path": "api/table/:tableId/cart"
+          },
+          {
+            "file": "./routes/api.table.$tableId.cart.$coffeeId.remove.ts",
+            "path": "api/table/:tableId/cart/:coffeeId/remove"
+          },
+          {
+            "file": "./routes/api.table.$tableId.cart.$coffeeId.delete.ts",
+            "path": "api/table/:tableId/cart/:coffeeId/delete"
+          },
+          {
+            "file": "./routes/checkout.tsx",
+            "path": "table/:id/checkout"
+          },
+          {
+            "file": "./routes/api.table.$tableId.checkout.ts",
+            "path": "api/table/:tableId/checkout"
+          },
+          {
+            "file": "./routes/about.tsx",
+            "path": "about"
+          },
+          {
+            "file": "./routes/contact.tsx",
+            "path": "contact"
+          },
+          {
+            "file": "./routes/terms.tsx",
+            "path": "terms"
+          },
+          {
+            "file": "./routes/privacy.tsx",
+            "path": "privacy"
+          },
+          {
+            "file": "routes/api.payment.verify.ts",
+            "path": "api/payment/verify"
+          },
+          {
+            "file": "./routes/menu.tsx",
+            "path": "menu"
+          }
+        ]
+      }
+    ]
+  },
+  "viteConfig": {
+    "build": {
+      "assetsDir": "assets"
+    }
+  }
+}
