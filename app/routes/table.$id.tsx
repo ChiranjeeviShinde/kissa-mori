@@ -38,6 +38,8 @@ export async function loader({ params }: Route.LoaderArgs) {
   };
 }
 
+export const meta: Route.MetaFunction = () => [{ title: "Menu — Kissa Mori" }];
+
 export default function TablePage() {
   const { table, images } = useLoaderData<typeof loader>();
 

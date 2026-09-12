@@ -1,5 +1,5 @@
 import { QrCode, Smartphone, ShoppingCart, Utensils } from "lucide-react";
-
+export const meta: Route.MetaFunction = () => [{ title: "Menu — Kissa Mori" }];
 export default function Menu() {
   return (
     <div className="min-h-screen bg-background text-text-primary">

@@ -24,6 +24,7 @@
     "lucide-react": "^1.25.0",
     "mongodb": "^7.5.0",
     "mongoose": "^9.8.1",
+    "motion": "^13.2.0",
     "razorpay": "^2.9.8",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

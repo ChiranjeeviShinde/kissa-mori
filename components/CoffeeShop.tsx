@@ -157,7 +157,7 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
         </div>
 
         <div className="grid grid-cols-2 gap-4 scrollbar-hide sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {filteredItems.map((coffee) => {
+          {filteredItems.map((coffee, index) => {
             const coffeeIndex = coffees.findIndex(
               (item) => item._id === coffee._id,
             );
@@ -167,6 +167,7 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
             return (
               <Link
                 key={coffee._id}
+                viewTransition
                 to={
                   tableId
                     ? `/coffee/${coffee._id}?table=${tableId}&image=${imageIndex}`
@@ -177,6 +178,7 @@ export default function CoffeeShop({ images = [], tableId }: CoffeeShopProps) {
                   id={coffee._id}
                   image={images[imageIndex]}
                   tableId={tableId}
+                  index={index}
                 />
               </Link>
             );

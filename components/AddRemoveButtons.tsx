@@ -2,6 +2,7 @@ import { Minus, Plus } from "lucide-react";
 import { useEffect } from "react";
 import { useFetcher } from "react-router";
 import { useCoffee } from "../app/context/CoffeeContext";
+import { motion } from "motion/react";
 
 const AddRemoveButtons = ({
   item,
@@ -51,34 +52,40 @@ const AddRemoveButtons = ({
   const atMaximum = displayQuantity >= item.stock || displayQuantity >= 6;
 
   return (
-    <div className="flex items-center rounded-full border border-border bg-surface">
-      <button
+    <div className="flex w-28 items-center rounded-full border border-border bg-surface">
+      <motion.button
+        type="button"
         onClick={() => handleRemoveItem(item._id)}
         disabled={!cartLoaded || atMinimum}
-        className={`cursor-pointer px-3 py-2 transition ${
+        whileTap={{ scale: 0.78 }}
+        transition={{ type: "spring", stiffness: 500, damping: 22 }}
+        className={`flex h-8 flex-1 cursor-pointer items-center justify-center px-0 transition ${
           atMinimum
             ? "cursor-not-allowed text-text-muted"
             : "text-text-secondary hover:text-text-primary"
         }`}
       >
         <Minus size={16} />
-      </button>
+      </motion.button>
 
-      <span className="w-8 text-center text-sm font-medium text-text-primary">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center text-center text-sm font-medium text-text-primary">
         {displayQuantity}
       </span>
 
-      <button
+      <motion.button
+        type="button"
         onClick={() => handleAddItem(item._id)}
         disabled={!cartLoaded || atMaximum}
-        className={`cursor-pointer px-3 py-2 transition ${
+        whileTap={{ scale: 0.78 }}
+        transition={{ type: "spring", stiffness: 500, damping: 22 }}
+        className={`flex h-8 flex-1 cursor-pointer items-center justify-center px-0 transition ${
           atMaximum
             ? "cursor-not-allowed text-text-muted"
             : "text-text-secondary hover:text-text-primary"
         }`}
       >
         <Plus size={16} />
-      </button>
+      </motion.button>
     </div>
   );
 };

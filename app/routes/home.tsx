@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-
+export const meta: Route.MetaFunction = () => [{ title: "Kissa Mori" }];
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-text-primary">

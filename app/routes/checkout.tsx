@@ -14,6 +14,8 @@ declare global {
   }
 }
 
+export const meta: Route.MetaFunction = () => [{ title: "Checkout — Kissa Mori" }];
+
 export default function Checkout() {
   const { id: tableId } = useParams();
 

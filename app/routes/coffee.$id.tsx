@@ -9,15 +9,17 @@ import { ArrowLeft, Delete } from "lucide-react";
 import AddRemoveButtons from "../../components/AddRemoveButtons";
 import { getImageFromRequest } from "../utils/image.server";
 import DeleteButton from "../../components/DeleteButton";
+import { AnimatePresence, motion } from "motion/react";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const image = await getImageFromRequest(request, getCoffeeImages);
 
   return { image };
 }
+export const meta: Route.MetaFunction = () => [{ title: "Coffee — Kissa Mori" }];
 
 export default function CoffeePage() {
-  const { coffees, cartItems, updateCartQuantity } = useCoffee();
+  const { coffees, cartItems, updateCartQuantity, cartLoaded } = useCoffee();
 
   const { id } = useParams();
 
@@ -93,24 +95,57 @@ export default function CoffeePage() {
                 ${coffee.price}
               </p>
 
-              <div className="flex items-center gap-4">
-                {quantity === 0 ? (
-                  <button
-                    onClick={handleAddToCart}
-                    disabled={coffee.stock === 0}
-                    className={`cursor-pointer rounded-full px-6 py-3 text-sm font-medium uppercase tracking-wider transition ${
-                      coffee.stock === 0
-                        ? "cursor-not-allowed bg-gray-200 text-gray-500 opacity-60"
-                        : "bg-espresso text-white hover:bg-accent-hover"
-                    }`}
-                  >
-                    {coffee.stock === 0 ? "Out of Stock" : "Add to Cart"}
-                  </button>
+              <div className="flex min-h-8 items-center gap-4">
+                {coffee.stock === 0 ? (
+                  <span className="flex h-8 w-28 items-center justify-center rounded-full bg-gray-200 px-2.5 text-[10px] font-medium uppercase tracking-wider text-gray-500 sm:text-[11px]">
+                    Out of Stock
+                  </span>
+                ) : !cartLoaded ? (
+                  <div aria-hidden="true" className="h-8 w-28" />
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <AddRemoveButtons item={coffee} tableId={tableId!} />
-                    <DeleteButton item={coffee} tableId={tableId!} />
-                  </div>
+                  <AnimatePresence initial={false} mode="popLayout">
+                    {quantity === 0 ? (
+                      <motion.button
+                        key="add-to-cart"
+                        layoutId={`cart-control-${coffee._id}`}
+                        onClick={handleAddToCart}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{
+                          layout: {
+                            type: "spring",
+                            stiffness: 500,
+                            damping: 35,
+                          },
+                          opacity: { duration: 0.12 },
+                        }}
+                        className="flex h-8 w-28 shrink-0 cursor-pointer items-center justify-center rounded-full bg-espresso px-2.5 text-[10px] font-medium uppercase tracking-wider text-white transition-colors hover:bg-accent-hover sm:text-[11px]"
+                      >
+                        Add to Cart
+                      </motion.button>
+                    ) : (
+                      <motion.div
+                        key="quantity"
+                        layoutId={`cart-control-${coffee._id}`}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{
+                          layout: {
+                            type: "spring",
+                            stiffness: 500,
+                            damping: 35,
+                          },
+                          opacity: { duration: 0.15 },
+                        }}
+                        className="flex shrink-0 items-center gap-2"
+                      >
+                        <AddRemoveButtons item={coffee} tableId={tableId!} />
+                        <DeleteButton item={coffee} tableId={tableId!} />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 )}
               </div>
             </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "motion/react";
 
 interface ItemBoxProps {
   name: string;
@@ -8,16 +9,25 @@ interface ItemBoxProps {
 
 const ItemBox = ({ name, active, onClick }: ItemBoxProps) => {
   return (
-    <button
+    <motion.button
       onClick={onClick}
-      className={`shrink-0 whitespace-nowrap rounded-full cursor-pointer border px-5 py-2 text-xs font-medium uppercase tracking-wider transition ${
+      whileTap={{ scale: 0.96 }}
+      transition={{ type: "spring", stiffness: 500, damping: 32 }}
+      className={`relative shrink-0 cursor-pointer whitespace-nowrap rounded-full border px-5 py-2 text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
         active
-          ? "border-espresso bg-espresso text-white shadow-sm"
+          ? "border-border text-white shadow-sm"
           : "border-border bg-surface text-text-secondary hover:border-espresso/40 hover:text-text-primary"
       }`}
     >
-      {name}
-    </button>
+      {active && (
+        <motion.span
+          layoutId="active-category"
+          className="absolute -inset-px -z-0 rounded-full border border-espresso bg-espresso"
+          transition={{ type: "spring", stiffness: 500, damping: 38 }}
+        />
+      )}
+      <span className="relative z-10">{name}</span>
+    </motion.button>
   );
 };
 
